@@ -10,15 +10,25 @@
 
 //Functions
 void keyboard(unsigned char key, int x, int y);
+void specialKeys(int key, int x, int y);
 void render(void);
 void createObjects();
 void init();
 void resize(int w, int h);
+bool moveEye(int direction);
 
 
 GLint viewport[4];
 GLdouble mvMatrix[16];
 GLdouble prMatrix[16];
+GLdouble eyepos[3] = {0,0,5};	//start backwards 5
+GLdouble eyefocus[3] = {0,0,4};	//start directly fowards
+GLdouble walkspeed = 0.25;	//how quickly the camera walks
+int turnspeedx = 2;			//how quickly the camera turns
+int turnspeedy = 2;
+
+//LISTS
+GLuint list_pyramid;
 
 
 int main(int argc, char** argv){
@@ -31,6 +41,7 @@ int main(int argc, char** argv){
   createObjects();
 
   glutKeyboardFunc(&keyboard);
+  glutSpecialFunc(&specialKeys);
   glutDisplayFunc(&render);
   glutReshapeFunc(&resize);
   glutMainLoop();
@@ -45,7 +56,96 @@ void keyboard(unsigned char key, int x, int y){
     case '\x1B':
       exit(EXIT_SUCCESS);
       break;
+	case 'w':
+		moveEye(0);
+		break;
+	case 's':
+		moveEye(1);
+		break;
+	case 'a':
+		moveEye(2);
+		break;
+	case 'd':
+		moveEye(3);
+		break;
+	case 'r':
+		moveEye(8);
+		break;
+	case 'f':
+		moveEye(9);
+		break;
+
   }
+}
+
+void specialKeys(int key, int x, int y){
+	switch (key)
+	{
+	case GLUT_KEY_LEFT:
+		moveEye(4);
+		break;
+	case GLUT_KEY_RIGHT:
+		moveEye(5);
+	case GLUT_KEY_UP:
+		moveEye(6);
+		break;
+	case GLUT_KEY_DOWN:
+		moveEye(7);
+		break;
+	}
+
+}
+
+bool moveEye(int direction){
+	switch (direction){
+	case 0:		//Forward
+		eyepos[2] -= walkspeed;
+		eyefocus[2] -= walkspeed;
+		break;
+	case 1:		//Backward
+		eyepos[2] += walkspeed;
+		eyefocus[2] += walkspeed;
+		break;
+	case 2:		//left
+		eyepos[0] -= walkspeed;
+		eyefocus[0] -= walkspeed;
+		break;
+	case 3:		//right
+		eyepos[0] += walkspeed;
+		eyefocus[0] += walkspeed;
+		break;
+
+
+	case 4:		//turn left
+		break;
+	case 5:		//turn right
+		break;
+	case 6:		//tilt up
+		break;
+	case 7:		//tilt down
+		break;
+	case 8:		//go up
+		eyepos[1] += walkspeed;
+		eyefocus[1] += walkspeed;
+		break;
+	case 9:		//go down
+		eyepos[1] -= walkspeed;
+		eyefocus[1] -= walkspeed;
+		break;
+	default:
+		return false;
+		break;
+	}
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(eyepos[0],eyepos[1],eyepos[2],
+		eyefocus[0],eyefocus[1],eyefocus[2],
+		0,1,0);
+	glGetDoublev(GL_MODELVIEW_MATRIX,mvMatrix);
+	glutPostRedisplay();
+
+	return true;
 }
 
 void init(){
@@ -55,6 +155,8 @@ void init(){
 
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_LINE);
+
+	glEnable(GL_DEPTH_TEST);
 }
 
 void render(){
@@ -68,8 +170,16 @@ void render(){
 	glVertex2f(.5,-.5);
 	glVertex2f(-.5,.5);
 	glVertex2f(.5,.5);
+	glColor3f(0.0F,1.0F,1.0F);
+	glVertex3f(-.5,.5,-1);
+	glVertex3f(.5,.5,-1);
   glEnd();
 
+  glColor3f(1.0F,1.0F,0.0F);
+  glCallList(list_pyramid);
+  glPushMatrix();
+	//do stuff
+  glPopMatrix();
 
   glFlush();
   glutSwapBuffers();
@@ -86,22 +196,29 @@ void resize (int w, int h){
 	} else {
 		ratio = static_cast<GLfloat> (w) / h;
 	}
-	gluPerspective(60, ratio,1,10);
+	gluPerspective(60, ratio,1,20);
 	glGetDoublev(GL_PROJECTION_MATRIX, prMatrix);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	gluLookAt(eyepos[0],eyepos[1],eyepos[2],
+		eyefocus[0],eyefocus[1],eyefocus[2],
+		0,1,0);
 	glGetDoublev(GL_MODELVIEW_MATRIX, mvMatrix);
-	gluLookAt(0,0,2.5,0,0,0,0,1,0);
 }
-
-
 
 void createObjects(){
-	GLuint list_fenceSpike;
-	list_fenceSpike = glGenLists(1);
+	list_pyramid = glGenLists(1);
 
-
-
+	glNewList(list_pyramid, GL_COMPILE);
+		glBegin(GL_TRIANGLE_FAN);
+		glVertex3f(0.0F,4.0F,0.0F);
+		glVertex3f(-0.5F,0.0F,0.5F);
+		glVertex3f(.5F,0.0F,.5F);
+		glVertex3f(.5F,0.0F,-.5F);
+		glColor3f(0.8F,0.8F,0.0F);
+		glVertex3f(-.5F,0.0F,-.5F);
+		glVertex3f(-0.5F,0.0F,0.5F);
+		glEnd();
+	glEndList();
 
 }
-
