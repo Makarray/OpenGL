@@ -1,0 +1,6 @@
+*
+!*.cpp
+!README
+!/Images
+!/OpenGL/OpenGL.cpp
+!.gitignore
