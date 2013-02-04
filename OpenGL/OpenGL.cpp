@@ -10,9 +10,10 @@
 
 //Functions
 void keyboard(unsigned char key, int x, int y);
-void display(void);
+void render(void);
 void createObjects();
 void init();
+void resize(int w, int h);
 
 
 GLint viewport[4];
@@ -26,10 +27,12 @@ int main(int argc, char** argv){
   glutInitWindowSize(800,650);
   glutCreateWindow("Castle by Matthew Shrider and James Uhe");
 
+  init();
   createObjects();
 
   glutKeyboardFunc(&keyboard);
-  glutDisplayFunc(&display);
+  glutDisplayFunc(&render);
+  glutReshapeFunc(&resize);
   glutMainLoop();
 
   return EXIT_SUCCESS;
@@ -46,16 +49,21 @@ void keyboard(unsigned char key, int x, int y){
 }
 
 void init(){
-   	
+   	glClearColor(0.0,0.0,0.0,1.0);
+	glLineWidth(2.0);
+	glPointSize(3.0);
+
+	glPolygonMode(GL_FRONT, GL_FILL);
+	glPolygonMode(GL_BACK, GL_LINE);
 }
 
-void display(){
+void render(){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glPolygonMode(GL_FRONT, GL_FILL);
 
   //just a test
   glBegin(GL_QUAD_STRIP);
-	glColor3f(0.0,0.8,0.8);
+	glColor3f(0.0F,0.8F,0.8F);
 	glVertex2f(-0.5,-.5);
 	glVertex2f(.5,-.5);
 	glVertex2f(-.5,.5);
@@ -77,12 +85,13 @@ void resize (int w, int h){
 		ratio = static_cast<GLfloat> (h) / w;
 	} else {
 		ratio = static_cast<GLfloat> (w) / h;
-		gluPerspective(60, ratio,-3,3);
 	}
+	gluPerspective(60, ratio,1,10);
 	glGetDoublev(GL_PROJECTION_MATRIX, prMatrix);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glGetDoublev(GL_MODELVIEW_MATRIX, mvMatrix);
+	gluLookAt(0,0,2.5,0,0,0,0,1,0);
 }
 
 
