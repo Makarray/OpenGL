@@ -1,6 +1,2 @@
-*
-!*.cpp
-!README
-!/Images
-!/OpenGL/OpenGL.cpp
-!.gitignore
+stdafx*
+*.h
