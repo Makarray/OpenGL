@@ -21,8 +21,8 @@ bool moveEye(int direction);
 GLint viewport[4];
 GLdouble mvMatrix[16];
 GLdouble prMatrix[16];
-GLdouble eyepos[3] = {0,0,5};	//start backwards 5
-GLdouble eyefocus[3] = {0,0,4};	//start directly fowards
+GLdouble eyepos[3] = {0,0,8};	//start backwards 8
+GLdouble eyefocus[3] = {0,0,7};	//start directly fowards
 GLdouble walkspeed = 0.25;	//how quickly the camera walks
 int turnspeedx = 2;			//how quickly the camera turns
 int turnspeedy = 2;
@@ -137,8 +137,6 @@ bool moveEye(int direction){
 		break;
 	}
 	glLoadIdentity();
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 	gluLookAt(eyepos[0],eyepos[1],eyepos[2],
 		eyefocus[0],eyefocus[1],eyefocus[2],
 		0,1,0);
@@ -163,23 +161,8 @@ void render(){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glPolygonMode(GL_FRONT, GL_FILL);
 
-  //just a test
-  glBegin(GL_QUAD_STRIP);
-	glColor3f(0.0F,0.8F,0.8F);
-	glVertex2f(-0.5,-.5);
-	glVertex2f(.5,-.5);
-	glVertex2f(-.5,.5);
-	glVertex2f(.5,.5);
-	glColor3f(0.0F,1.0F,1.0F);
-	glVertex3f(-.5,.5,-1);
-	glVertex3f(.5,.5,-1);
-  glEnd();
 
-  glColor3f(1.0F,1.0F,0.0F);
   glCallList(list_pyramid);
-  glPushMatrix();
-	//do stuff
-  glPopMatrix();
 
   glFlush();
   glutSwapBuffers();
