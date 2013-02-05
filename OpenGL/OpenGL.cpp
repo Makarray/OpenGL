@@ -4,10 +4,11 @@
 * Create objects that mirror a digital photograph
 * Authors: Matthew Shrider and James Uhe
 * ************************************************/
-
+#include <GL/glut.h>	//Linux
+/*
 #include "stdafx.h"	//for visual c++, just delete this if not on visual studio
 #include "gl/glut.h"
-
+*/
 //Functions
 void keyboard(unsigned char key, int x, int y);
 void specialKeys(int key, int x, int y);
@@ -39,17 +40,19 @@ void render(){
 
  // glCallList(list_pyramid);
  // glCallList(list_column);
-  glCallList(list_fence);
-
+//  glCallList(list_fence);
+//  glCallList(list_stairstep);
+  glCallList(list_door);
   glFlush();
   glutSwapBuffers();
 }
 
 void createObjects(){
 
+
 	list_pyramid = glGenLists(1);
 	glNewList(list_pyramid, GL_COMPILE);
-		glColor3ub(85,90,90);
+	glColor3ub(85,90,90);
 		glBegin(GL_TRIANGLE_FAN);
 		glVertex3f(0.0F,3.0F,0.0F);
 		glColor3ub(66,72,70);
@@ -65,7 +68,7 @@ void createObjects(){
 
 	list_column = glGenLists(1);
 	glNewList(list_column, GL_COMPILE);
-	glBegin(GL_QUAD_STRIP);	//sides
+	glBegin(GL_QUAD_STRIP);					//sides
 			glColor3ub(160,160,160);
 		glVertex3f(-1.0F,2.0F,1.0F);
 		glVertex3f(-1.0F,0.0F,1.0F);
@@ -96,6 +99,7 @@ void createObjects(){
 	glEnd();
 	glEndList();
 
+//Fence Begin
 	list_fence = glGenLists(1);
 	glNewList(list_fence, GL_COMPILE);
 	glBegin(GL_QUAD_STRIP);			//right post
@@ -137,6 +141,79 @@ void createObjects(){
 		glVertex3f(0.18F,2.35F,0.0F);
 		glVertex3f(-0.18F,2.35F,0.0F);
 	glEnd();
+	glEndList();
+//Fence End
+
+//Stair Begin
+	//front
+	list_stairstep=glGenLists(1);
+	glNewList(list_stairstep, GL_COMPILE);
+	glBegin(GL_QUAD_STRIP);
+	glColor3f(0.7,0.7,0.7);
+	glVertex3f(.1,1.5,.1);
+	glVertex3f(.1,.1,.1);
+	glVertex3f(5.1,1.5,.1);
+	glVertex3f(5.1,.1,.1);
+	glEnd();
+
+	//top
+	glBegin(GL_QUAD_STRIP);
+	glColor3f(0.9,0.9,0.9);
+	glVertex3f(.1,1.5,-1.1);
+	glVertex3f(.1,1.5,.1);
+	glVertex3f(5.1,1.5,-1.1);
+	glVertex3f(5.1,1.5,.1);
+	glEnd();
+
+	//side A
+	glBegin(GL_QUAD_STRIP);
+	glColor3f(0.6,0.6,0.6);
+	glVertex3f(.1,.1,-1.1);
+	glVertex3f(.1,.1,.1);
+	glVertex3f(.1,1.5,-1.1);
+	glVertex3f(.1,1.5,.1);
+	glEnd();
+
+	//side B
+	glBegin(GL_QUAD_STRIP);
+	glVertex3f(5.1,1.5,.1);
+	glVertex3f(5.1,.1,.1);
+	glVertex3f(5.1,1.5,-1.1);
+	glVertex3f(5.1,.1,-1.1);
+	glEnd();
+glEndList();
+//Stair End
+
+//door start
+list_door=glGenLists(1);
+	glNewList(list_door, GL_COMPILE);
+
+		GLfloat door_x=.3,door_y=.3,door_z=.1;
+		for(int i=1; i<=20; i++){
+			//brown box
+			glBegin(GL_QUAD_STRIP);
+			glColor3f(0.5,0.4,0.4);
+			glVertex3f(door_x,door_y,door_z);
+			glVertex3f(door_x+1.0,door_y,door_z);
+			glVertex3f(door_x,door_y+2.0,door_z);
+			glVertex3f(door_x+1.0,door_y+2.0,door_z);
+			glEnd();
+			//black box
+			glBegin(GL_QUAD_STRIP);
+			glColor3f(0.0,0.0,0.0);
+			glVertex3f(door_x-.3,door_y-.3,door_z);
+			glVertex3f(door_x+1.3,door_y-.3,door_z);
+			glVertex3f(door_x-.3,door_y+2.3,door_z);
+			glVertex3f(door_x+1.3,door_y+2.3,door_z);
+			glEnd();
+			if(i%5!=0){
+				door_x+=1.3;
+			}
+			else{
+				door_y+=2.3;
+				door_x=.3;
+			}
+		}
 	glEndList();
 
 }
@@ -258,6 +335,7 @@ bool moveEye(int direction){
 }
 
 void init(){
+
    	glClearColor(89/255.F,115/255.0F,254/255.0F,1.0);
 	glLineWidth(2.0);
 	glPointSize(3.0);
