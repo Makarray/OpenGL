@@ -24,13 +24,122 @@ GLdouble prMatrix[16];
 GLdouble eyepos[3] = {0,0,8};	//start backwards 8
 GLdouble eyefocus[3] = {0,0,7};	//start directly fowards
 GLdouble walkspeed = 0.25;	//how quickly the camera walks
-int turnspeedx = 2;			//how quickly the camera turns
-int turnspeedy = 2;
+GLdouble turnspeedx = .1;			//how quickly the camera turns
+GLdouble turnspeedy = .1;
 
 //LISTS
-GLuint list_pyramid;
+GLuint list_pyramid, list_column, list_windowsemi, list_windowblock, list_crenn;
+GLuint list_door, list_stairstep, list_stairside, list_tree, list_hill, list_fence;
 
 
+void render(){
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glPolygonMode(GL_FRONT, GL_FILL);
+
+
+ // glCallList(list_pyramid);
+ // glCallList(list_column);
+  glCallList(list_fence);
+
+  glFlush();
+  glutSwapBuffers();
+}
+
+void createObjects(){
+
+	list_pyramid = glGenLists(1);
+	glNewList(list_pyramid, GL_COMPILE);
+		glColor3ub(85,90,90);
+		glBegin(GL_TRIANGLE_FAN);
+		glVertex3f(0.0F,3.0F,0.0F);
+		glColor3ub(66,72,70);
+		glVertex3f(-0.5F,0.0F,0.5F);
+		glColor3ub(95,105,105);
+		glVertex3f(.5F,0.0F,.5F);
+		glVertex3f(.5F,0.0F,-.5F);
+		glColor3ub(60,65,75);
+		glVertex3f(-.5F,0.0F,-.5F);
+		glVertex3f(-0.5F,0.0F,0.5F);
+		glEnd();
+	glEndList();
+
+	list_column = glGenLists(1);
+	glNewList(list_column, GL_COMPILE);
+	glBegin(GL_QUAD_STRIP);	//sides
+			glColor3ub(160,160,160);
+		glVertex3f(-1.0F,2.0F,1.0F);
+		glVertex3f(-1.0F,0.0F,1.0F);
+			glColor3ub(190,190,190);
+		glVertex3f(1.0F,2.0F,1.0F);
+		glVertex3f(1.0F,0.0F,1.0F);		//End of First
+		glVertex3f(1.0F,2.0F,-1.0F);
+		glVertex3f(1.0F,0.0F,-1.0F);	//end of second
+			glColor3ub(160,160,160);
+		glVertex3f(-1.0F,2.0F,-1.0F);
+		glVertex3f(-1.0F,0.0F,-1.0F);	//end of third
+		glVertex3f(-1.0F,2.0F,1.0F);
+		glVertex3f(-1.0F,0.0F,1.0F);
+	glEnd();
+	glBegin(GL_QUADS);		//top and bot
+			glColor3ub(190,190,190);
+		glVertex3f(1.0F,2.0F,1.0F);
+		glVertex3f(1.0F,2.0F,-1.0F);
+			glColor3ub(160,160,160);
+		glVertex3f(-1.0F,2.0F,-1.0F);	
+		glVertex3f(-1.0F,2.0F,1.0F);//end of top
+			glColor3ub(160,160,160);
+		glVertex3f(1.0F,0.0F,-1.0F);
+		glVertex3f(1.0F,0.0F,1.0F);
+			glColor3ub(100,100,100);
+		glVertex3f(-1.0F,0.0F,1.0F);
+		glVertex3f(-1.0F,0.0F,-1.0F);	//end of bot
+	glEnd();
+	glEndList();
+
+	list_fence = glGenLists(1);
+	glNewList(list_fence, GL_COMPILE);
+	glBegin(GL_QUAD_STRIP);			//right post
+		glColor3ub(0,10,0);
+		glVertex3f(-0.04F,2.35F,0.00F);
+		glVertex3f(-0.04F,0.0F,0.00F);
+		glVertex3f(0.04F,2.35F,0.00F);
+		glVertex3f(0.04F,0.0F,0.00F);
+		glVertex3f(-0.04F,2.35F,0.00F);
+		glVertex3f(-0.04F,0.0F,0.00F);
+	glEnd();
+	glBegin(GL_QUAD_STRIP);			//left post
+		glVertex3f(-0.4F,2.0F,0.0F);
+		glVertex3f(-0.4F,0.0F,0.0F);
+		glVertex3f(-0.43F,2.0F,0.0F);
+		glVertex3f(-0.43F,0.0F,0.0F);
+		glVertex3f(-0.4F,2.0F,0.0F);
+		glVertex3f(-0.4F,0.0F,0.0F);
+	glEnd();
+	glBegin(GL_QUAD_STRIP);			//top post
+		glVertex3f(-0.8F,2.16F,0.0F);
+		glVertex3f(-0.8F,2.0F,0.0F);
+		glVertex3f(0.05F,2.16F,0.0F);
+		glVertex3f(0.05F,2.0F,0.0F);
+		glVertex3f(-0.8F,2.16F,0.0F);
+		glVertex3f(-0.8F,2.0F,0.0F);
+	glEnd();
+	glBegin(GL_QUAD_STRIP);			//bot post
+		glVertex3f(-0.8F,1.7F,0.0F);
+		glVertex3f(-0.8F,1.56F,0.0F);
+		glVertex3f(0.05F,1.7F,0.0F);
+		glVertex3f(0.05F,1.56F,0.0F);
+		glVertex3f(-0.8F,1.7F,0.0F);
+		glVertex3f(-0.8F,1.56F,0.0F);
+	glEnd();
+	glBegin(GL_TRIANGLE_FAN);		//Spike
+		glVertex3f(0.0F,2.9F,0.0F);
+		glVertex3f(-0.18F,2.35F,0.0F);
+		glVertex3f(0.18F,2.35F,0.0F);
+		glVertex3f(-0.18F,2.35F,0.0F);
+	glEnd();
+	glEndList();
+
+}
 int main(int argc, char** argv){
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
@@ -117,8 +226,10 @@ bool moveEye(int direction){
 
 
 	case 4:		//turn left
+		eyefocus[0] -= turnspeedx;
 		break;
 	case 5:		//turn right
+		eyefocus[0] += turnspeedx;
 		break;
 	case 6:		//tilt up
 		break;
@@ -147,7 +258,7 @@ bool moveEye(int direction){
 }
 
 void init(){
-   	glClearColor(0.0,0.0,0.0,1.0);
+   	glClearColor(89/255.F,115/255.0F,254/255.0F,1.0);
 	glLineWidth(2.0);
 	glPointSize(3.0);
 
@@ -157,16 +268,7 @@ void init(){
 	glEnable(GL_DEPTH_TEST);
 }
 
-void render(){
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glPolygonMode(GL_FRONT, GL_FILL);
 
-
-  glCallList(list_pyramid);
-
-  glFlush();
-  glutSwapBuffers();
-}
 
 void resize (int w, int h){
 	glViewport(0,0,(GLint) w, (GLint) h);
@@ -189,19 +291,3 @@ void resize (int w, int h){
 	glGetDoublev(GL_MODELVIEW_MATRIX, mvMatrix);
 }
 
-void createObjects(){
-	list_pyramid = glGenLists(1);
-
-	glNewList(list_pyramid, GL_COMPILE);
-		glBegin(GL_TRIANGLE_FAN);
-		glVertex3f(0.0F,4.0F,0.0F);
-		glVertex3f(-0.5F,0.0F,0.5F);
-		glVertex3f(.5F,0.0F,.5F);
-		glVertex3f(.5F,0.0F,-.5F);
-		glColor3f(0.8F,0.8F,0.0F);
-		glVertex3f(-.5F,0.0F,-.5F);
-		glVertex3f(-0.5F,0.0F,0.5F);
-		glEnd();
-	glEndList();
-
-}
