@@ -4,11 +4,9 @@
 * Create objects that mirror a digital photograph
 * Authors: Matthew Shrider and James Uhe
 * ************************************************/
-#include <GL/glut.h>	//Linux
-/*
+#include <GL/glut.h>	
 #include "stdafx.h"	//for visual c++, just delete this if not on visual studio
-#include "gl/glut.h"
-*/
+
 //Functions
 void keyboard(unsigned char key, int x, int y);
 void specialKeys(int key, int x, int y);
@@ -29,20 +27,42 @@ GLdouble turnspeedx = .1;			//how quickly the camera turns
 GLdouble turnspeedy = .1;
 
 //LISTS
-GLuint list_pyramid, list_column, list_windowsemi, list_windowblock, list_crenn;
+GLuint list_pyramid, list_column, list_windowsemi, list_windowblock, list_crenn, list_coord;
 GLuint list_door, list_stairstep, list_stairside, list_tree, list_hill, list_fence;
+GLdouble objectMatrix[16];
 
 
 void render(){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glPolygonMode(GL_FRONT, GL_FILL);
 
+ 
+  glMultMatrixd(objectMatrix);
 
- // glCallList(list_pyramid);
- // glCallList(list_column);
-//  glCallList(list_fence);
-//  glCallList(list_stairstep);
+  glPushMatrix();
+	glTranslatef(-5.0F,0.0F,0.0F);
+	glCallList(list_pyramid);
+  glPopMatrix();
+  glPushMatrix();
+	glTranslatef(-10.0F,0.0F,0.0F);
+    glCallList(list_column);
+  glPopMatrix();
+  glPushMatrix();
+	glTranslatef(5.0F,0.0F,0.0F);
+  glCallList(list_fence);
+  glPopMatrix();
+  glPushMatrix();
+	glTranslatef(0.0F,-5.0F,0.0F);
+  glCallList(list_stairstep);
+  glPopMatrix();
+  glPushMatrix();
+	glTranslatef(0.0F,8.0F,0.0F);
   glCallList(list_door);
+  glPopMatrix();
+
+
+
+
   glFlush();
   glutSwapBuffers();
 }
@@ -50,6 +70,23 @@ void render(){
 void createObjects(){
 
 
+//coordinates
+	list_coord = glGenLists(1);
+	glNewList(list_coord, GL_COMPILE);
+  glBegin(GL_LINES);
+  glColor3ub(255,0,0);
+     glVertex3f(0.0F,0.0F,0.0F);
+	 glVertex3f(0.5F,0.0F,.0F);
+  glColor3ub(0,255,0);
+     glVertex3f(.0F,.0F,.0F);
+	 glVertex3f(.0F,.5F,.0F);
+  glColor3ub(0,0,255);
+     glVertex3f(.0F,.0F,.0F);
+	 glVertex3f(.0F,.0F,.5F);
+  glEnd();
+	glEnd();
+	glEndList();
+//Pyramid
 	list_pyramid = glGenLists(1);
 	glNewList(list_pyramid, GL_COMPILE);
 	glColor3ub(85,90,90);
@@ -65,7 +102,8 @@ void createObjects(){
 		glVertex3f(-0.5F,0.0F,0.5F);
 		glEnd();
 	glEndList();
-
+//EndPyarmid
+//Block
 	list_column = glGenLists(1);
 	glNewList(list_column, GL_COMPILE);
 	glBegin(GL_QUAD_STRIP);					//sides
@@ -98,6 +136,7 @@ void createObjects(){
 		glVertex3f(-1.0F,0.0F,-1.0F);	//end of bot
 	glEnd();
 	glEndList();
+//End Block
 
 //Fence Begin
 	list_fence = glGenLists(1);
@@ -193,10 +232,10 @@ list_door=glGenLists(1);
 			//brown box
 			glBegin(GL_QUAD_STRIP);
 			glColor3f(0.5,0.4,0.4);
-			glVertex3f(door_x,door_y,door_z);
-			glVertex3f(door_x+1.0,door_y,door_z);
-			glVertex3f(door_x,door_y+2.0,door_z);
-			glVertex3f(door_x+1.0,door_y+2.0,door_z);
+			glVertex3f(door_x,door_y,door_z+.01);
+			glVertex3f(door_x+1.0,door_y,door_z+.01);
+			glVertex3f(door_x,door_y+2.0,door_z+.01);
+			glVertex3f(door_x+1.0,door_y+2.0,door_z+.01);
 			glEnd();
 			//black box
 			glBegin(GL_QUAD_STRIP);
@@ -215,6 +254,7 @@ list_door=glGenLists(1);
 			}
 		}
 	glEndList();
+//door end
 
 }
 int main(int argc, char** argv){
@@ -223,8 +263,12 @@ int main(int argc, char** argv){
   glutInitWindowSize(800,650);
   glutCreateWindow("Castle by Matthew Shrider and James Uhe");
 
+
+
   init();
   createObjects();
+
+
 
   glutKeyboardFunc(&keyboard);
   glutSpecialFunc(&specialKeys);
@@ -272,6 +316,7 @@ void specialKeys(int key, int x, int y){
 		break;
 	case GLUT_KEY_RIGHT:
 		moveEye(5);
+		break;
 	case GLUT_KEY_UP:
 		moveEye(6);
 		break;
@@ -285,49 +330,84 @@ void specialKeys(int key, int x, int y){
 bool moveEye(int direction){
 	switch (direction){
 	case 0:		//Forward
-		eyepos[2] -= walkspeed;
-		eyefocus[2] -= walkspeed;
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glTranslated(0,0,1);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
 		break;
 	case 1:		//Backward
-		eyepos[2] += walkspeed;
-		eyefocus[2] += walkspeed;
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glTranslatef(0,0,-1);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
 		break;
 	case 2:		//left
-		eyepos[0] -= walkspeed;
-		eyefocus[0] -= walkspeed;
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glTranslatef(1,0,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
 		break;
 	case 3:		//right
-		eyepos[0] += walkspeed;
-		eyefocus[0] += walkspeed;
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glTranslatef(-1,0,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
 		break;
 
 
 	case 4:		//turn left
-		eyefocus[0] -= turnspeedx;
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glRotated(-5,0,1,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		//eyefocus[0] -= turnspeedx;
 		break;
 	case 5:		//turn right
-		eyefocus[0] += turnspeedx;
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glRotated(5,0,1,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
 		break;
 	case 6:		//tilt up
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glRotated(-5,1,0,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
 		break;
 	case 7:		//tilt down
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glRotated(5,1,0,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
 		break;
 	case 8:		//go up
-		eyepos[1] += walkspeed;
-		eyefocus[1] += walkspeed;
+		
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glTranslatef(0,-1,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
 		break;
 	case 9:		//go down
-		eyepos[1] -= walkspeed;
-		eyefocus[1] -= walkspeed;
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glTranslatef(0,1,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
 		break;
 	default:
 		return false;
 		break;
 	}
 	glLoadIdentity();
-	gluLookAt(eyepos[0],eyepos[1],eyepos[2],
-		eyefocus[0],eyefocus[1],eyefocus[2],
-		0,1,0);
 	glGetDoublev(GL_MODELVIEW_MATRIX,mvMatrix);
 	glutPostRedisplay();
 
@@ -342,6 +422,16 @@ void init(){
 
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_LINE);
+
+	glPushMatrix();
+	glLoadIdentity();
+	glGetDoublev(GL_MODELVIEW_MATRIX, mvMatrix);
+	glPopMatrix();
+
+	glPushMatrix();
+    glLoadIdentity();                                   /* C = I     */
+	glGetDoublev(GL_MODELVIEW_MATRIX, objectMatrix);   /* potCF = C */
+    glPopMatrix();
 
 	glEnable(GL_DEPTH_TEST);
 }
@@ -359,13 +449,13 @@ void resize (int w, int h){
 	} else {
 		ratio = static_cast<GLfloat> (w) / h;
 	}
-	gluPerspective(60, ratio,1,20);
+	gluPerspective(60, ratio,1,60);
 	glGetDoublev(GL_PROJECTION_MATRIX, prMatrix);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(eyepos[0],eyepos[1],eyepos[2],
 		eyefocus[0],eyefocus[1],eyefocus[2],
 		0,1,0);
-	glGetDoublev(GL_MODELVIEW_MATRIX, mvMatrix);
+	glGetDoublev(GL_MODELVIEW_MATRIX, objectMatrix);
 }
 
