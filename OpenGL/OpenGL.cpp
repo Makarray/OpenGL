@@ -36,9 +36,8 @@ void render(){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glPolygonMode(GL_FRONT, GL_FILL);
 
- 
+ glPushMatrix();
   glMultMatrixd(objectMatrix);
-
   glPushMatrix();
 	glTranslatef(-5.0F,0.0F,0.0F);
 	glCallList(list_pyramid);
@@ -59,7 +58,7 @@ void render(){
 	glTranslatef(0.0F,8.0F,0.0F);
   glCallList(list_door);
   glPopMatrix();
-
+  glPopMatrix();
 
 
 
@@ -407,7 +406,6 @@ bool moveEye(int direction){
 		return false;
 		break;
 	}
-	glLoadIdentity();
 	glGetDoublev(GL_MODELVIEW_MATRIX,mvMatrix);
 	glutPostRedisplay();
 
@@ -456,6 +454,5 @@ void resize (int w, int h){
 	gluLookAt(eyepos[0],eyepos[1],eyepos[2],
 		eyefocus[0],eyefocus[1],eyefocus[2],
 		0,1,0);
-	glGetDoublev(GL_MODELVIEW_MATRIX, objectMatrix);
 }
 
