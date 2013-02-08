@@ -62,6 +62,7 @@ void render(){
 	glTranslatef(0.0F,4.0F,-1.0F);
  glCallList(list_hill);
   glPopMatrix();
+  glPopMatrix();
 
 
 
@@ -397,13 +398,23 @@ void keyboard(unsigned char key, int x, int y){
 }
 
 void specialKeys(int key, int x, int y){
+	int modifiers = glutGetModifiers();
 	switch (key)
 	{
 	case GLUT_KEY_LEFT:
+		if ( modifiers == GLUT_ACTIVE_SHIFT ){
+			moveEye(10);
+		}
+		else{
 		moveEye(4);
+		}
 		break;
 	case GLUT_KEY_RIGHT:
-		moveEye(5);
+		if (modifiers == GLUT_ACTIVE_SHIFT ){
+		moveEye(11);
+		} else {
+			moveEye(5);
+		}
 		break;
 	case GLUT_KEY_UP:
 		moveEye(6);
@@ -419,29 +430,33 @@ bool moveEye(int direction){
 	switch (direction){
 	case 0:		//Forward
 		glPushMatrix();
-		glLoadMatrixd(objectMatrix);
+		glLoadIdentity();
 		glTranslated(0,0,1);
+		glMultMatrixd(objectMatrix);
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
 		break;
 	case 1:		//Backward
 		glPushMatrix();
-		glLoadMatrixd(objectMatrix);
+		glLoadIdentity();
 		glTranslatef(0,0,-1);
+		glMultMatrixd(objectMatrix);
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
 		break;
 	case 2:		//left
 		glPushMatrix();
-		glLoadMatrixd(objectMatrix);
+		glLoadIdentity();
 		glTranslatef(1,0,0);
+		glMultMatrixd(objectMatrix);
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
 		break;
 	case 3:		//right
 		glPushMatrix();
-		glLoadMatrixd(objectMatrix);
+		glLoadIdentity();
 		glTranslatef(-1,0,0);
+		glMultMatrixd(objectMatrix);
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
 		break;
@@ -449,45 +464,78 @@ bool moveEye(int direction){
 
 	case 4:		//turn left
 		glPushMatrix();
-		glLoadMatrixd(objectMatrix);
+		glLoadIdentity();
+		glTranslated(0.0F,0.0F,8.0F);
 		glRotated(-5,0,1,0);
+		glTranslated(0.0F,0.0F,-8.0F);
+		glMultMatrixd(objectMatrix);
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
-		//eyefocus[0] -= turnspeedx;
 		break;
 	case 5:		//turn right
 		glPushMatrix();
-		glLoadMatrixd(objectMatrix);
+		glLoadIdentity();
+		glTranslated(0.0F,0.0F,8.0F);
 		glRotated(5,0,1,0);
+		glTranslated(0.0F,0.0F,-8.0F);
+		glMultMatrixd(objectMatrix);
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
 		break;
 	case 6:		//tilt up
 		glPushMatrix();
-		glLoadMatrixd(objectMatrix);
+		glLoadIdentity();
+		glTranslated(0.0F,0.0F,8.0F);
 		glRotated(-5,1,0,0);
+		glTranslated(0.0F,0.0F,-8.0F);
+		glMultMatrixd(objectMatrix);
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
 		break;
 	case 7:		//tilt down
 		glPushMatrix();
-		glLoadMatrixd(objectMatrix);
+		glLoadIdentity();
+		glTranslated(0.0F,0.0F,8.0F);
 		glRotated(5,1,0,0);
+		glTranslated(0.0F,0.0F,-8.0F);
+		glMultMatrixd(objectMatrix);
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
 		break;
 	case 8:		//go up
 		
 		glPushMatrix();
-		glLoadMatrixd(objectMatrix);
-		glTranslatef(0,-1,0);
+		glLoadIdentity();
+		glTranslated(0.0,-1.0,0.0);
+		glMultMatrixd(objectMatrix);
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
 		break;
 	case 9:		//go down
 		glPushMatrix();
-		glLoadMatrixd(objectMatrix);
-		glTranslatef(0,1,0);
+		glLoadIdentity();
+		glTranslated(0.0,1.0,0);
+		glMultMatrixd(objectMatrix);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		break;
+	case 10:	//rotate left
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslated(0.0F,0.0F,8.0F);
+		glRotated(5,0,0,1);
+		glTranslated(0.0F,0.0F,-8.0F);
+		glMultMatrixd(objectMatrix);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		break;
+	case 11:	//rotate right
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslated(0.0F,0.0F,8.0F);
+		glRotated(-5,0,0,1);
+		glTranslated(0.0F,0.0F,-8.0F);
+		glMultMatrixd(objectMatrix);
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
 		break;
