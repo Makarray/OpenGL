@@ -54,12 +54,12 @@ void render(){
 	glTranslatef(0.0F,-5.0F,0.0F);
   glCallList(list_stairstep);
   glPopMatrix();
-  glPushMatrix();
-	glTranslatef(0.0F,8.0F,0.0F);
+*/  glPushMatrix();
+	glTranslatef(20.0F,-9.0F,-8.0F);
   glCallList(list_door);
   glPopMatrix();
-*/ glPushMatrix();
-	glTranslatef(0.0F,4.0F,-1.0F);
+ glPushMatrix();
+	glTranslatef(-10.0F,4.0F,-1.0F);
  glCallList(list_hill);
   glPopMatrix();
   glPopMatrix();
@@ -282,7 +282,7 @@ list_door=glGenLists(1);
 			glEnd();
 			//Side A
 			glBegin(GL_QUAD_STRIP);
-			glColor3f(0.1,.7,.8);
+			glColor3f(0.0,.75,0.0);
 			glVertex3f(5.0,5.0,0.0);
 			glVertex3f(15.0,0.1,0.0);
 			glVertex3f(5.0,5.0,-20);
@@ -291,7 +291,7 @@ list_door=glGenLists(1);
 
 			//Side B
 			glBegin(GL_QUAD_STRIP);
-				glColor3f(0.3,.7,.8);
+			glColor3f(0.0,.7,0.0);
 				glVertex3f(0.1,0.1,0.0);
 				glVertex3f(5.0,5.0,0.0);
 				glVertex3f(0.1,0.1,-20);
@@ -318,7 +318,7 @@ list_door=glGenLists(1);
 
 			//point
 			glBegin(GL_TRIANGLE_FAN);
-			glColor3f(0.9,.2,.2);
+			glColor3f(0.0,.65,0.0);
 			glVertex3f(7.5,0.1,10.0);
 			glVertex3f(0.1,0.1,0.0);
 			glVertex3f(15.0,0.1,0.0);
@@ -328,20 +328,76 @@ list_door=glGenLists(1);
 
 			//slope to outcrop
 			glBegin(GL_QUAD_STRIP);
-				glColor3f(0.4,.9,.2);
+			glColor3f(0.0,.71,0.0);
 				glVertex3f(15.0,0.1,0.0);
 				glVertex3f(7.5,0.1,10.0);
 				glVertex3f(20.0,-7.5,0.0);
 				glVertex3f(20,0.-8.5,12.0);
 			glEnd();
 
-			//slope to outcrop
+			//outcrop
 				glBegin(GL_QUAD_STRIP);
-					glColor3f(0.0,.9,0.0);
+					glColor3f(0.0,.7,0.0);
 					glVertex3f(20.0,-7.5,0.0);
 					glVertex3f(20,0.-8.5,12.0);
 					glVertex3f(25.0,-8.5,0.0);
 					glVertex3f(25,0.-8.5,13.0);
+				glEnd();
+				//outcrop ramp
+					glBegin(GL_QUAD_STRIP);
+					glColor3f(0.0,.65,0.0);
+						glVertex3f(20.0,-7.5,0.0);
+						glVertex3f(25.0,-8.5,0.0);
+						glVertex3f(20.0,-7.5,-.3);
+						glVertex3f(25.0,-6.5,-1.0);
+					glEnd();
+
+					//outcrop ramp castle side drop (dirt)
+						glBegin(GL_QUAD_STRIP);
+						glColor3f(0.4,.2,.2);
+							glVertex3f(20.0,-7.5,-.3);
+							glVertex3f(25.0,-6.5,-1.0);
+							glVertex3f(20.0,-10.0,-.3);
+							glVertex3f(25.0,-10.0,-1.0);
+						glEnd();
+
+						//outcrop drop (dirt)
+						glBegin(GL_QUAD_STRIP);
+						glColor3f(0.4,.2,.2);
+							glVertex3f(25.0,-8.5,0.0);
+							glVertex3f(25,0.-8.5,13.0);
+							glVertex3f(25.0,-10.0,0.0);
+							glVertex3f(25,0.-10.0,13.0);
+						glEnd();
+
+						//outcrop ramp castle side drop (dirt)
+							glBegin(GL_QUAD_STRIP);
+							glColor3f(0.4,.2,.2);
+								glVertex3f(25.0,-10.0,-1.0);
+								glVertex3f(25.0,-6.5,-1.0);
+								glVertex3f(25.0,-10.0,0.0);
+								glVertex3f(25.0,-8.5,0.0);
+							glEnd();
+
+							//slope to outcrop drop (dirt)
+							glBegin(GL_QUAD_STRIP);
+							glColor3f(0.4,.2,.2);
+								glVertex3f(15.0,0.1,0.0);
+								glVertex3f(20.0,-7.5,0.0);
+								glVertex3f(15.0,-10.0,0.0);
+								glVertex3f(20.0,-10.0,0.0);
+							glEnd();
+
+
+			//outcrop
+				glBegin(GL_QUAD_STRIP);
+					glColor3f(0.0,.6,0.0);
+
+					glVertex3f(20,0.-8.5,12.0);
+					glVertex3f(25,0.-8.5,13.0);
+					glVertex3f(20,0.-6.8,12.0);
+					glVertex3f(25,0.-6.8,13.0);
+
 				glEnd();
 
 			glEndList();
