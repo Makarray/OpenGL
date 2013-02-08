@@ -5,7 +5,7 @@
 * Authors: Matthew Shrider and James Uhe
 * ************************************************/
 #include <GL/glut.h>	
-#include "stdafx.h"	//for visual c++, just delete this if not on visual studio
+//#include "stdafx.h"	//for visual c++, just delete this if not on visual studio
 
 //Functions
 void keyboard(unsigned char key, int x, int y);
@@ -38,7 +38,7 @@ void render(){
 
  glPushMatrix();
   glMultMatrixd(objectMatrix);
-  glPushMatrix();
+ /* glPushMatrix();
 	glTranslatef(-5.0F,0.0F,0.0F);
 	glCallList(list_pyramid);
   glPopMatrix();
@@ -58,6 +58,9 @@ void render(){
 	glTranslatef(0.0F,8.0F,0.0F);
   glCallList(list_door);
   glPopMatrix();
+*/ glPushMatrix();
+	glTranslatef(0.0F,4.0F,-1.0F);
+ glCallList(list_hill);
   glPopMatrix();
 
 
@@ -255,6 +258,92 @@ list_door=glGenLists(1);
 	glEndList();
 //door end
 
+	//NOT DONE WITH THIS, but you can see where I'm headed with it.
+//hill start
+	list_hill=glGenLists(1);
+		glNewList(list_hill, GL_COMPILE);
+		//front
+			glBegin(GL_TRIANGLE_STRIP);
+				glColor3f(0.1,.7,0.0);
+				glVertex3f(0.1,0.1,0.0);
+				glVertex3f(15.0,0.1,0.0);
+				glVertex3f(5.0,5.0,0.0);
+
+			glEnd();
+
+			//back
+			glBegin(GL_TRIANGLE_STRIP);
+				glColor3f(0.1,.7,0.0);
+				glVertex3f(0.1,0.1,-20);
+				glVertex3f(15.0,0.1,-20);
+				glVertex3f(5.0,5.0,-20);
+
+			glEnd();
+			//Side A
+			glBegin(GL_QUAD_STRIP);
+			glColor3f(0.1,.7,.8);
+			glVertex3f(5.0,5.0,0.0);
+			glVertex3f(15.0,0.1,0.0);
+			glVertex3f(5.0,5.0,-20);
+			glVertex3f(15.0,0.1,-20);
+			glEnd();
+
+			//Side B
+			glBegin(GL_QUAD_STRIP);
+				glColor3f(0.3,.7,.8);
+				glVertex3f(0.1,0.1,0.0);
+				glVertex3f(5.0,5.0,0.0);
+				glVertex3f(0.1,0.1,-20);
+				glVertex3f(5.0,5.0,-20);
+			glEnd();
+
+			//Dirt side A
+			glBegin(GL_QUAD_STRIP);
+			glColor3f(0.4,.2,.2);
+			glVertex3f(15.0,0.1,-20);
+			glVertex3f(15.0,0.1,0.0);
+			glVertex3f(15.0,-10.0,-20);
+			glVertex3f(15.0,-10.0,0.0);
+			glEnd();
+
+			//Dirt side B
+			glBegin(GL_QUAD_STRIP);
+			glColor3f(0.4,.2,.2);
+			glVertex3f(0.1,0.1,0.0);
+			glVertex3f(0.1,0.1,-20);
+			glVertex3f(-8.0,-10.0,0.0);
+			glVertex3f(-8.0,-10.0,-20);
+			glEnd();
+
+			//point
+			glBegin(GL_TRIANGLE_FAN);
+			glColor3f(0.9,.2,.2);
+			glVertex3f(7.5,0.1,10.0);
+			glVertex3f(0.1,0.1,0.0);
+			glVertex3f(15.0,0.1,0.0);
+			glVertex3f(5.0,5.0,0.0);
+			glVertex3f(0.1,0.1,0.0);
+			glEnd();
+
+			//slope to outcrop
+			glBegin(GL_QUAD_STRIP);
+				glColor3f(0.4,.9,.2);
+				glVertex3f(15.0,0.1,0.0);
+				glVertex3f(7.5,0.1,10.0);
+				glVertex3f(20.0,-7.5,0.0);
+				glVertex3f(20,0.-8.5,12.0);
+			glEnd();
+
+			//slope to outcrop
+				glBegin(GL_QUAD_STRIP);
+					glColor3f(0.0,.9,0.0);
+					glVertex3f(20.0,-7.5,0.0);
+					glVertex3f(20,0.-8.5,12.0);
+					glVertex3f(25.0,-8.5,0.0);
+					glVertex3f(25,0.-8.5,13.0);
+				glEnd();
+
+			glEndList();
 }
 int main(int argc, char** argv){
   glutInit(&argc, argv);
