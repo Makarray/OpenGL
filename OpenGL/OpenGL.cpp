@@ -18,7 +18,6 @@ void init();
 void resize(int w, int h);
 bool moveEye(int direction);
 
-
 GLint viewport[4];
 GLdouble mvMatrix[16];
 GLdouble prMatrix[16];
@@ -40,7 +39,7 @@ void render(){
 
  glPushMatrix();
   glMultMatrixd(objectMatrix);
- /* glPushMatrix();
+  glPushMatrix();
 	glTranslatef(-5.0F,0.0F,0.0F);
 	glCallList(list_pyramid);
   glPopMatrix();
@@ -52,11 +51,28 @@ void render(){
 	glTranslatef(5.0F,0.0F,0.0F);
   glCallList(list_fence);
   glPopMatrix();
+
+  double stair_x=0,stair_y =-5.0, stair_z=0;
+  for(int i =0; i<20;i++){
+
+	  glPushMatrix();
+	  glTranslatef(stair_x,stair_y,stair_z);
+	  glCallList(list_stairstep);
+	  glPopMatrix();
+	  stair_y+=.1;
+	  stair_z+=-.1;
+	 }
+
+
   glPushMatrix();
-	glTranslatef(0.0F,-5.0F,0.0F);
-  glCallList(list_stairstep);
-  glPopMatrix();
-*/  glPushMatrix();
+
+	 glRotatef(15,1,0,0);
+	glTranslatef(-.2,-4.4,1);
+  glCallList(list_stairside);
+   glPopMatrix();
+
+
+  glPushMatrix();
 	glTranslatef(20.0F,-9.0F,-8.0F);
   glCallList(list_door);
   glPopMatrix();
@@ -64,10 +80,24 @@ void render(){
 	glTranslatef(-30.0F,6.0F,-10.0F);
  glCallList(list_hill);
   glPopMatrix();
-  glPopMatrix();
+
+  glPushMatrix();
+	glTranslatef(30,-10,0.0);
+  glCallList(list_tree);
+   glPopMatrix();
 
 
+   glPushMatrix();
+	glTranslatef(-5.0F,0.0F,0.0F);
+   glCallList(list_windowblock);
+    glPopMatrix();
 
+    glPushMatrix();
+ 	glTranslatef(-0.0F,0.0F,0.0F);
+    glCallList(list_windowsemi);
+     glPopMatrix();
+
+   glPopMatrix();
   glFlush();
   glutSwapBuffers();
 }
@@ -191,39 +221,40 @@ void createObjects(){
 //Stair Begin
 	//front
 	list_stairstep=glGenLists(1);
+
 	glNewList(list_stairstep, GL_COMPILE);
 	glBegin(GL_QUAD_STRIP);
 	glColor3f(0.7,0.7,0.7);
-	glVertex3f(.1,1.5,.1);
+	glVertex3f(.1,.2,.1);
 	glVertex3f(.1,.1,.1);
-	glVertex3f(5.1,1.5,.1);
-	glVertex3f(5.1,.1,.1);
+	glVertex3f(3.1,.2,.1);
+	glVertex3f(3.1,.1,.1);
 	glEnd();
 
 	//top
 	glBegin(GL_QUAD_STRIP);
 	glColor3f(0.9,0.9,0.9);
-	glVertex3f(.1,1.5,-1.1);
-	glVertex3f(.1,1.5,.1);
-	glVertex3f(5.1,1.5,-1.1);
-	glVertex3f(5.1,1.5,.1);
+	glVertex3f(.1,.2,-.2);
+	glVertex3f(.1,.2,.1);
+	glVertex3f(3.1,.2,-.2);
+	glVertex3f(3.1,.2,.1);
 	glEnd();
 
 	//side A
 	glBegin(GL_QUAD_STRIP);
 	glColor3f(0.6,0.6,0.6);
-	glVertex3f(.1,.1,-1.1);
+	glVertex3f(.1,.1,-.2);
 	glVertex3f(.1,.1,.1);
-	glVertex3f(.1,1.5,-1.1);
-	glVertex3f(.1,1.5,.1);
+	glVertex3f(.1,.2,-.2);
+	glVertex3f(.1,.2,.1);
 	glEnd();
 
 	//side B
 	glBegin(GL_QUAD_STRIP);
-	glVertex3f(5.1,1.5,.1);
-	glVertex3f(5.1,.1,.1);
-	glVertex3f(5.1,1.5,-1.1);
-	glVertex3f(5.1,.1,-1.1);
+	glVertex3f(3.1,.2,.1);
+	glVertex3f(3.1,.1,.1);
+	glVertex3f(3.1,.2,-.2);
+	glVertex3f(3.1,.1,-.2);
 	glEnd();
 glEndList();
 //Stair End
@@ -261,7 +292,6 @@ list_door=glGenLists(1);
 	glEndList();
 //door end
 
-	//NOT DONE WITH THIS, but you can see where I'm headed with it.
 //hill start
 	list_hill=glGenLists(1);
 		glNewList(list_hill, GL_COMPILE);
@@ -503,10 +533,243 @@ list_door=glGenLists(1);
 				glVertex3f(7.5,-10.0,17.0);
 
 				glEnd();
+			glEndList();
 
+	//tree start
+			list_tree=glGenLists(1);
+			glNewList(list_tree, GL_COMPILE);
+				glBegin(GL_QUAD_STRIP);
+
+				glColor3f(0.36,.2,.2);
+				double trunk_x=.1,trunk_y=.1;
+				for(int i=0; i<360;i++){
+					double radius= 2*M_PI*i/360;
+					trunk_y= sin(radius)/3;
+					trunk_x= cos(radius)/3;
+					glVertex3f(trunk_x,5,trunk_y);
+					glVertex3f(trunk_x,0,trunk_y);
+				}
+				glEnd();
+
+
+				glBegin(GL_TRIANGLE_FAN);
+				double leaves_x=0,leaves_y=0;
+				glColor3f(0.0,6.3,.0);
+				glVertex3f(0,6.5,sin(2*M_PI)/6);
+
+				for(int i=0; i<720;i++){
+					double radius = 2*M_PI*i/720;
+					leaves_x=2*cos(radius);
+					leaves_y=2*sin(radius);
+					glVertex3f(leaves_x,2,leaves_y);
+				}
+				glEnd();
+				glEndList();
+	//end tree
+
+	//stairside start
+			list_stairside=glGenLists(1);
+			glNewList(list_stairside, GL_COMPILE);
+
+			//front
+			glBegin(GL_QUAD_STRIP);
+					glColor3f(0.7,0.7,0.7);
+					glVertex3f(0,.2,.1);
+
+					glVertex3f(0,0,.1);
+					glVertex3f(.3,.2,.1);
+					glVertex3f(.3,0,.1);
+
+					glEnd();
+
+			//Back
+			glBegin(GL_QUAD_STRIP);
+					glColor3f(0.7,0.7,0.7);
+
+					glVertex3f(0,2.2,-3);
+					glVertex3f(0,2,-3);
+					glVertex3f(.3,2.2,-3);
+					glVertex3f(.3,2,-3);
+
+					glEnd();
+
+					//top
+					glBegin(GL_QUAD_STRIP);
+					glColor3f(0.6,0.6,0.6);
+					glVertex3f(.3,.2,.1);
+					glVertex3f(.3,2.2,-3);
+					glVertex3f(0,.2,.1);
+					glVertex3f(0,2.2,-3);
+					glEnd();
+
+					//side A
+					glBegin(GL_QUAD_STRIP);
+					glColor3f(6.5,6.5,6.5);
+					glVertex3f(.3,.2,.1);
+					glVertex3f(.3,0,.1);
+					glVertex3f(.3,2.2,-3);
+					glVertex3f(.3,2,-3);
+					glEnd();
+
+					//side B
+					glBegin(GL_QUAD_STRIP);
+					glColor3f(6.5,6.5,6.5);
+					glVertex3f(0,0,.1);
+					glVertex3f(0,.2,.1);
+					glVertex3f(0,2,-3);
+					glVertex3f(0,2.2,-3);
+					glEnd();
+			glEndList();
+		//stairside end
+
+		//windowblock start
+			list_windowblock=glGenLists(1);
+			glNewList(list_windowblock, GL_COMPILE);
+			glBegin(GL_QUAD_STRIP);
+				glColor3f(0,0,0);
+				glVertex3f(0,1.5,0);
+				glVertex3f(0,0,0);
+				glVertex3f(1,1.5,0);
+				glVertex3f(1,0,0);
+			glEnd();
+
+		//bottom strip
+			glBegin(GL_QUAD_STRIP);
+				glColor3f(6,6,6);
+				glVertex3f(0,1,0.01);
+				glVertex3f(1,1,.01);
+				glVertex3f(0,1.05,.01);
+				glVertex3f(1,1.05,0.01);
+
+		//top strip
+			glEnd();
+			glBegin(GL_QUAD_STRIP);
+				glColor3f(6,6,6);
+				glVertex3f(0,.5,0.01);
+				glVertex3f(1,.5,.01);
+				glVertex3f(0,.55,.01);
+				glVertex3f(1,.55,0.01);
+
+			glEnd();
+
+		//vertical strip
+			glBegin(GL_QUAD_STRIP);
+				glColor3f(6,6,6);
+				glVertex3f(.475,0,0.01);
+
+				glVertex3f(.525,0,.01);
+				glVertex3f(.475,1.5,.01);
+				glVertex3f(.525,1.5,0.01);
+			glEnd();
+			glEndList();
+
+
+		//windowblock start
+			list_windowsemi=glGenLists(1);
+			glNewList(list_windowsemi, GL_COMPILE);
+
+		//semi black block
+			glBegin(GL_TRIANGLE_FAN);
+			double semi_x=0,semi_y=0;
+			glColor3f(0.0,0,.0);
+			glVertex3f(0,0,0);
+
+			for(int i=0; i<=180;i++){
+				double radius = M_PI*i/180;
+				semi_x=2*cos(radius);
+				semi_y=2*sin(radius)/2;
+				glVertex3f(semi_x,semi_y,0);
+			}
+			glEnd();
+
+		//black block
+			glBegin(GL_QUAD_STRIP);
+			glColor3f(0.0,0,.0);
+				glVertex3f(-2*(cos(M_PI)),-1*M_PI/2,0);
+				glVertex3f(-2*(cos(M_PI)),0,0);
+				glVertex3f(2*(cos(M_PI)),-1*M_PI/2,0);
+				glVertex3f(2*(cos(M_PI)),0,0);
+
+			glEnd();
+
+			//semi block outline
+				glBegin(GL_QUAD_STRIP);
+				glColor3f(.2,.2,.2);
+					glVertex3f(-2*(cos(M_PI))+.1,-1*M_PI/2-.1,-.01);
+					glVertex3f(-2*(cos(M_PI))+.1,.1,-.01);
+					glVertex3f(2*(cos(M_PI))-.1,-1*M_PI/2-.1,-.01);
+					glVertex3f(2*(cos(M_PI))-.1,.1,-.01);
+				glEnd();
+
+			//semi outline
+			glBegin(GL_TRIANGLE_FAN);
+			double semi_outline_x=0,semi_outline_y=0;
+			glColor3f(.2,.2,.2);
+			glVertex3f(0,0,0);
+
+			for(int i=0; i<=180;i++){
+				double radius = M_PI*i/180;
+				semi_outline_x=2*cos(radius);
+				semi_outline_y=sin(radius)+.1;
+				if(semi_outline_x<0){
+					semi_outline_x-=.1;
+				}
+				else semi_outline_x+=.1;
+				glVertex3f(semi_outline_x,semi_outline_y,-.01);
+			}
+			glEnd();
+
+			//horizontal divide (top)
+			glBegin(GL_QUAD_STRIP);
+			glColor3f(0.2,.20,.20);
+				glVertex3f(2*(cos(M_PI)),-.2,.1);
+				glVertex3f(-2*(cos(M_PI)),-.2,.1);
+				glVertex3f(2*(cos(M_PI)),-.1,.1);
+				glVertex3f(-2*(cos(M_PI)),-.1,.1);
+
+			glEnd();
+
+
+			//horizontal divide (bottom)
+			glBegin(GL_QUAD_STRIP);
+			glColor3f(0.2,.20,.20);
+				glVertex3f(2*(cos(M_PI)),-.2-M_PI/4,.1);
+				glVertex3f(-2*(cos(M_PI)),-.2-M_PI/4,.1);
+				glVertex3f(2*(cos(M_PI)),-.1-M_PI/4,.1);
+				glVertex3f(-2*(cos(M_PI)),-.1-M_PI/4,.1);
+
+			glEnd();
+
+			//vertical divide (center)
+				glBegin(GL_QUAD_STRIP);
+				glColor3f(.2,.2,.2);
+				glVertex3f(-.1,-1*M_PI/2,.1);
+				glVertex3f(.1,-1*M_PI/2,.1);
+				glVertex3f(-.1,1,.1);
+				glVertex3f(.1,1,.1);
+				glEnd();
+
+
+			//vertical divide (left)
+				glBegin(GL_QUAD_STRIP);
+				glColor3f(.2,.2,.2);
+				glVertex3f(.1-M_PI/3,sin(2*M_PI/3),.1);
+				glVertex3f(-.1-M_PI/3,sin(2*M_PI/3),.1);
+				glVertex3f(.1-M_PI/3,-1*M_PI/2,.1);
+				glVertex3f(-.1-M_PI/3,-1*M_PI/2,.1);
+				glEnd();
+			//vertical divide (left)
+				glBegin(GL_QUAD_STRIP);
+				glColor3f(.2,.2,.2);
+				glVertex3f(.1+M_PI/3,sin(2*M_PI/3),.1);
+				glVertex3f(-.1+M_PI/3,sin(2*M_PI/3),.1);
+				glVertex3f(.1+M_PI/3,-1*M_PI/2,.1);
+				glVertex3f(-.1+M_PI/3,-1*M_PI/2,.1);
+				glEnd();
 
 			glEndList();
 }
+
 int main(int argc, char** argv){
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
