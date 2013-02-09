@@ -566,22 +566,34 @@ void specialKeys(int key, int x, int y){
 		if ( modifiers == GLUT_ACTIVE_SHIFT ){
 			moveEye(10);
 		}
-		else{
+		else if(modifiers == GLUT_ACTIVE_CTRL) {
+			moveEye(13);
+		} else {
 		moveEye(4);
 		}
 		break;
 	case GLUT_KEY_RIGHT:
 		if (modifiers == GLUT_ACTIVE_SHIFT ){
 		moveEye(11);
+		} else if(modifiers == GLUT_ACTIVE_CTRL) {
+			moveEye(12);
 		} else {
 			moveEye(5);
 		}
 		break;
 	case GLUT_KEY_UP:
+		if (modifiers == GLUT_ACTIVE_CTRL) {
+			moveEye(14);
+		} else {
 		moveEye(6);
+		}
 		break;
 	case GLUT_KEY_DOWN:
+		if (modifiers == GLUT_ACTIVE_CTRL) {
+			moveEye(15);
+		} else {
 		moveEye(7);
+		}
 		break;
 	}
 
@@ -700,6 +712,35 @@ bool moveEye(int direction){
 		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
 		glPopMatrix();
 		break;
+	case 12:	//TurnObject ccw
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glRotated(5,0,1,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		break;
+	case 13:	//TurnObject cw
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glRotated(-5,0,1,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		break;
+	case 14:	//TurnObject Over
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glRotated(5,1,0,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		break;
+	case 15:	//TurnObject Under
+		glPushMatrix();
+		glLoadMatrixd(objectMatrix);
+		glRotated(-5,1,0,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		break;
+
 	default:
 		return false;
 		break;
