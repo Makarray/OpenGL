@@ -4,8 +4,10 @@
 * Create objects that mirror a digital photograph
 * Authors: Matthew Shrider and James Uhe
 * ************************************************/
-#include <GL/glut.h>	
+#include <GL/glut.h>
+#include <math.h>
 //#include "stdafx.h"	//for visual c++, just delete this if not on visual studio
+
 
 //Functions
 void keyboard(unsigned char key, int x, int y);
@@ -59,7 +61,7 @@ void render(){
   glCallList(list_door);
   glPopMatrix();
  glPushMatrix();
-	glTranslatef(-10.0F,4.0F,-1.0F);
+	glTranslatef(-30.0F,6.0F,-10.0F);
  glCallList(list_hill);
   glPopMatrix();
   glPopMatrix();
@@ -275,11 +277,21 @@ list_door=glGenLists(1);
 			//back
 			glBegin(GL_TRIANGLE_STRIP);
 				glColor3f(0.1,.7,0.0);
-				glVertex3f(0.1,0.1,-20);
 				glVertex3f(15.0,0.1,-20);
+				glVertex3f(0.1,0.1,-20);
 				glVertex3f(5.0,5.0,-20);
 
 			glEnd();
+
+			//back drop
+			glBegin(GL_QUAD_STRIP);
+			glColor3f(0.325,.2,.2);
+				glVertex3f(0.1,0.1,-20);
+				glVertex3f(15.0,0.1,-20);
+				glVertex3f(-8.0,-10.0,-20);
+				glVertex3f(15.0,-10.0,-20);
+			glEnd();
+
 			//Side A
 			glBegin(GL_QUAD_STRIP);
 			glColor3f(0.0,.75,0.0);
@@ -298,18 +310,46 @@ list_door=glGenLists(1);
 				glVertex3f(5.0,5.0,-20);
 			glEnd();
 
+			//Peak hump
+			double front_x=5.0,front_y=5.0,front_z=-20.0;
+			glBegin(GL_QUAD_STRIP);
+				glColor3f(0.0,.65,0.0);
+				glVertex3f(5.0,5.0,-20);
+
+				for(int i=0; i<360;i++){
+					double radius= (2*M_PI)*i/360;
+					front_y= sin(radius)/9+4.9;
+					front_x= cos(radius)/9+5;
+					glVertex3f(front_x,front_y,front_z);
+					glVertex3f(front_x,front_y,0);
+				}
+				glEnd();
+
+
 			//Dirt side A
 			glBegin(GL_QUAD_STRIP);
-			glColor3f(0.4,.2,.2);
-			glVertex3f(15.0,0.1,-20);
-			glVertex3f(15.0,0.1,0.0);
-			glVertex3f(15.0,-10.0,-20);
-			glVertex3f(15.0,-10.0,0.0);
-			glEnd();
+					glColor3f(0.4,.2,.2);
 
+					glVertex3f(15.0,0.1,-20);
+					glVertex3f(15.0,0.1,0.0);
+					glVertex3f(15.0,-10.0,-20);
+					glVertex3f(15.0,-10.0,0.0);
+			glEnd();
+			//rounded side A
+			glBegin(GL_QUAD_STRIP);
+			glColor3f(0.0,.65,0.0);
+			double side_x=5.0,side_y=5.0,side_z=-20.0;
+				for(int i=0; i<360;i++){
+					double radius= (2*M_PI)*i/360;
+					side_y= sin(radius)/4;
+					side_x= cos(radius)/4+15;
+					glVertex3f(side_x,side_y,side_z);
+				glVertex3f(side_x,side_y,0);
+			}
+			glEnd();
 			//Dirt side B
 			glBegin(GL_QUAD_STRIP);
-			glColor3f(0.4,.2,.2);
+			glColor3f(0.35,.2,.2);
 			glVertex3f(0.1,0.1,0.0);
 			glVertex3f(0.1,0.1,-20);
 			glVertex3f(-8.0,-10.0,0.0);
@@ -343,20 +383,40 @@ list_door=glGenLists(1);
 					glVertex3f(25.0,-8.5,0.0);
 					glVertex3f(25,0.-8.5,13.0);
 				glEnd();
-				//outcrop ramp
-					glBegin(GL_QUAD_STRIP);
+				//outcrop hump
+
+				double ramp_x=24.99,ramp_y=-8.2,ramp_z=0.0;
+
+				glBegin(GL_TRIANGLE_FAN);
 					glColor3f(0.0,.65,0.0);
-						glVertex3f(20.0,-7.5,0.0);
-						glVertex3f(25.0,-8.5,0.0);
-						glVertex3f(20.0,-7.5,-.3);
-						glVertex3f(25.0,-6.5,-1.0);
+					glVertex3f(20.0,-7.5,0.0);
+
+					for(int i=0; i<180;i++){
+						double radius= M_PI*i/180;
+						ramp_y= sin(radius)-8.5;
+						ramp_z= cos(radius);
+						glVertex3f(ramp_x,ramp_y,ramp_z);
+					}
 					glEnd();
 
+					//outcrop hump cover
+					double cover_x=24.99,cover_y=-8.2,cover_z=0.0;
+					glBegin(GL_TRIANGLE_FAN);
+					glColor3f(0.4,.2,.2);
+					glVertex3f(25.0,-8.5,0.0);
+
+						for(int i=0; i<300;i++){
+							double radius= M_PI*i/300;
+							cover_y= sin(radius)-8.5;
+							cover_z= cos(radius);
+							glVertex3f(cover_x,cover_y,cover_z);
+						}
+						glEnd();
 					//outcrop ramp castle side drop (dirt)
 						glBegin(GL_QUAD_STRIP);
 						glColor3f(0.4,.2,.2);
-							glVertex3f(20.0,-7.5,-.3);
-							glVertex3f(25.0,-6.5,-1.0);
+							glVertex3f(20.0,-7.5,-.001);
+							glVertex3f(ramp_x,ramp_y,ramp_z);
 							glVertex3f(20.0,-10.0,-.3);
 							glVertex3f(25.0,-10.0,-1.0);
 						glEnd();
@@ -364,20 +424,11 @@ list_door=glGenLists(1);
 						//outcrop drop (dirt)
 						glBegin(GL_QUAD_STRIP);
 						glColor3f(0.4,.2,.2);
-							glVertex3f(25.0,-8.5,0.0);
+							glVertex3f(25.0,-8.5,-1.0);
 							glVertex3f(25,0.-8.5,13.0);
-							glVertex3f(25.0,-10.0,0.0);
+							glVertex3f(25.0,-10.0,-1.0);
 							glVertex3f(25,0.-10.0,13.0);
 						glEnd();
-
-						//outcrop ramp castle side drop (dirt)
-							glBegin(GL_QUAD_STRIP);
-							glColor3f(0.4,.2,.2);
-								glVertex3f(25.0,-10.0,-1.0);
-								glVertex3f(25.0,-6.5,-1.0);
-								glVertex3f(25.0,-10.0,0.0);
-								glVertex3f(25.0,-8.5,0.0);
-							glEnd();
 
 							//slope to outcrop drop (dirt)
 							glBegin(GL_QUAD_STRIP);
@@ -389,16 +440,70 @@ list_door=glGenLists(1);
 							glEnd();
 
 
-			//outcrop
+			//outcrop rise (away from castle)
 				glBegin(GL_QUAD_STRIP);
-					glColor3f(0.0,.6,0.0);
-
-					glVertex3f(20,0.-8.5,12.0);
+				glColor3f(0.4,.2,.2);
 					glVertex3f(25,0.-8.5,13.0);
-					glVertex3f(20,0.-6.8,12.0);
-					glVertex3f(25,0.-6.8,13.0);
+					glVertex3f(20,0.-8.5,12.0);
+					glVertex3f(27,0.-7.2,14.0);
+					glVertex3f(7.5,0.1,10.0);
+					//glVertex3f(20,0.-7.2,12.0);
+				glEnd();
+
+				//platform away from castle
+				glBegin(GL_QUAD_STRIP);
+				glColor3f(0.0,6.3,.0);
+				glVertex3f(27,0.-7.2,14.0);
+				glVertex3f(7.5,0.1,10.0);
+				glVertex3f(27,0.-7.2,17.0);
+				glVertex3f(7.5,0.1,17.0);
+				glEnd();
+
+				//platform away from castle drop
+				glBegin(GL_QUAD_STRIP);
+				glColor3f(0.4,.2,.2);
+				glVertex3f(27,-10,17.0);
+				glVertex3f(27,0.-10.0,13.0);
+				glVertex3f(27,0.-7.2,17.0);
+				glVertex3f(27,0.-7.2,14.0);
 
 				glEnd();
+				//castle facing platform drop
+				glBegin(GL_QUAD_STRIP);
+
+				glColor3f(.35,.2,.2);
+				glVertex3f(25,0.-8.5,13.0);
+				glVertex3f(27,0.-7.2,14.0);
+				glVertex3f(25,0.-10.0,13.0);
+				glVertex3f(27,0.-10.0,13.0);
+
+				glEnd();
+				//front platform drop
+				glBegin(GL_QUAD_STRIP);
+				glVertex3f(27,0.-7.2,17.0);
+				glVertex3f(7.5,0.1,17.0);
+				glVertex3f(27,-10.0,17.0);
+				glVertex3f(7.5,-10.0,17.0);
+				glEnd();
+
+				//left point drop
+				glBegin(GL_QUAD_STRIP);
+				glColor3f(0.4,.2,.2);
+				glVertex3f(7.5,0.1,10.0);
+				glVertex3f(0.1,0.1,0.0);
+				glVertex3f(7.5,-10.0,10.0);
+				glVertex3f(-8.0,-10.0,0.0);
+				glEnd();
+
+				glBegin(GL_QUAD_STRIP);
+				glColor3f(0.36,.2,.2);
+				glVertex3f(7.5,0.1,10.0);
+				glVertex3f(7.5,-10.0,10.0);
+				glVertex3f(7.5,0.1,17.0);
+				glVertex3f(7.5,-10.0,17.0);
+
+				glEnd();
+
 
 			glEndList();
 }
