@@ -4,6 +4,9 @@
 * Create objects that mirror a digital photograph
 * Authors: Matthew Shrider and James Uhe
 * ************************************************/
+#if (defined(WIN32) | defined(_WIN32))
+#define _USE_MATH_DEFINES
+#endif
 #include <GL/glut.h>
 #include <math.h>
 //#include "stdafx.h"	//for visual c++, just delete this if not on visual studio
@@ -28,7 +31,7 @@ GLdouble turnspeedx = .1;			//how quickly the camera turns
 GLdouble turnspeedy = .1;
 
 //LISTS
-GLuint list_pyramid, list_column, list_windowsemi, list_windowblock, list_crenn, list_coord;
+GLuint list_pyramid, list_column, list_windowsemi, list_windowblock, list_crenn, list_coord, list_roof;
 GLuint list_door, list_stairstep, list_stairside, list_tree, list_hill, list_fence,list_tower;
 GLuint list_wall,list_outer_wall,list_small_tower,list_full_castle;
 GLdouble objectMatrix[16];
@@ -58,6 +61,12 @@ void render(){
    	glScaled(.8,.6,.5);
     glCallList(list_hill);
      glPopMatrix();
+
+	 glPushMatrix();
+	 glTranslatef(1.0F,0.0F,-13.0F);
+	 glCallList(list_crenn);
+	 //glCallList(list_roof);
+	 glPopMatrix();
 
 /*
 
@@ -188,10 +197,10 @@ void createObjects(){
 			glColor3ub(160,160,160);
 		glVertex3f(-1.0F,2.0F,-1.0F);	
 		glVertex3f(-1.0F,2.0F,1.0F);//end of top
-			glColor3ub(160,160,160);
+		//	glColor3ub(160,160,160);
 		glVertex3f(1.0F,0.0F,-1.0F);
 		glVertex3f(1.0F,0.0F,1.0F);
-			glColor3ub(100,100,100);
+		//	glColor3ub(100,100,100);
 		glVertex3f(-1.0F,0.0F,1.0F);
 		glVertex3f(-1.0F,0.0F,-1.0F);	//end of bot
 	glEnd();
@@ -383,7 +392,7 @@ list_door=glGenLists(1);
 
 			//Dirt side A
 			glBegin(GL_QUAD_STRIP);
-					glColor3f(0.4,.2,.2);
+					glColor3ub(130,130,80);
 
 					glVertex3f(15.0,0.1,-20);
 					glVertex3f(15.0,0.1,0.0);
@@ -404,7 +413,7 @@ list_door=glGenLists(1);
 			glEnd();
 			//Dirt side B
 			glBegin(GL_QUAD_STRIP);
-			glColor3f(0.35,.2,.2);
+			glColor3ub(130,130,80);
 			glVertex3f(0.1,0.1,0.0);
 			glVertex3f(0.1,0.1,-20);
 			glVertex3f(-8.0,-10.0,0.0);
@@ -457,7 +466,7 @@ list_door=glGenLists(1);
 					//outcrop hump cover
 					double cover_x=24.99,cover_y=-8.2,cover_z=0.0;
 					glBegin(GL_TRIANGLE_FAN);
-					glColor3f(0.4,.2,.2);
+					glColor3ub(130,130,80);
 					glVertex3f(25.0,-8.5,0.0);
 
 						for(int i=0; i<300;i++){
@@ -469,7 +478,7 @@ list_door=glGenLists(1);
 						glEnd();
 					//outcrop ramp castle side drop (dirt)
 						glBegin(GL_QUAD_STRIP);
-						glColor3f(0.4,.2,.2);
+						glColor3ub(130,130,80);
 							glVertex3f(20.0,-7.5,-.001);
 							glVertex3f(ramp_x,ramp_y,ramp_z);
 							glVertex3f(20.0,-10.0,-.3);
@@ -478,7 +487,7 @@ list_door=glGenLists(1);
 
 						//outcrop drop (dirt)
 						glBegin(GL_QUAD_STRIP);
-						glColor3f(0.4,.2,.2);
+						glColor3ub(130,130,80);
 							glVertex3f(25.0,-8.5,-1.0);
 							glVertex3f(25,0.-8.5,13.0);
 							glVertex3f(25.0,-10.0,-1.0);
@@ -487,7 +496,7 @@ list_door=glGenLists(1);
 
 							//slope to outcrop drop (dirt)
 							glBegin(GL_QUAD_STRIP);
-							glColor3f(0.4,.2,.2);
+							glColor3ub(130,130,80);
 								glVertex3f(15.0,0.1,0.0);
 								glVertex3f(20.0,-7.5,0.0);
 								glVertex3f(15.0,-10.0,0.0);
@@ -497,7 +506,7 @@ list_door=glGenLists(1);
 
 			//outcrop rise (away from castle)
 				glBegin(GL_QUAD_STRIP);
-				glColor3f(0.4,.2,.2);
+				glColor3ub(130,130,80);
 					glVertex3f(25,0.-8.5,13.0);
 					glVertex3f(20,0.-8.5,12.0);
 					glVertex3f(27,0.-7.2,14.0);
@@ -507,6 +516,7 @@ list_door=glGenLists(1);
 
 				//platform away from castle
 				glBegin(GL_QUAD_STRIP);
+
 				glColor3f(0.0,6.3,.0);
 				glVertex3f(27,0.-7.2,14.0);
 				glVertex3f(7.5,0.1,10.0);
@@ -516,7 +526,7 @@ list_door=glGenLists(1);
 
 				//platform away from castle drop
 				glBegin(GL_QUAD_STRIP);
-				glColor3f(0.4,.2,.2);
+				glColor3ub(130,130,80);
 				glVertex3f(27,-10,17.0);
 				glVertex3f(27,0.-10.0,13.0);
 				glVertex3f(27,0.-7.2,17.0);
@@ -526,7 +536,7 @@ list_door=glGenLists(1);
 				//castle facing platform drop
 				glBegin(GL_QUAD_STRIP);
 
-				glColor3f(.35,.2,.2);
+				glColor3ub(130,130,80);
 				glVertex3f(25,0.-8.5,13.0);
 				glVertex3f(27,0.-7.2,14.0);
 				glVertex3f(25,0.-10.0,13.0);
@@ -543,7 +553,7 @@ list_door=glGenLists(1);
 
 				//left point drop
 				glBegin(GL_QUAD_STRIP);
-				glColor3f(0.4,.2,.2);
+				glColor3ub(130,130,80);
 				glVertex3f(7.5,0.1,10.0);
 				glVertex3f(0.1,0.1,0.0);
 				glVertex3f(7.5,-10.0,10.0);
@@ -551,7 +561,7 @@ list_door=glGenLists(1);
 				glEnd();
 
 				glBegin(GL_QUAD_STRIP);
-				glColor3f(0.36,.2,.2);
+				glColor3ub(130,130,80);
 				glVertex3f(7.5,0.1,10.0);
 				glVertex3f(7.5,-10.0,10.0);
 				glVertex3f(7.5,0.1,17.0);
@@ -646,6 +656,65 @@ list_door=glGenLists(1);
 					glEnd();
 			glEndList();
 		//stairside end
+
+		//crennelations
+			list_crenn = glGenLists(1);
+			glNewList(list_crenn,GL_COMPILE);
+			glBegin(GL_QUADS);
+			glColor3ub(110,110,110);
+			glVertex3f(-.07F,.2F,0.0F);
+			glVertex3f(-.07F,0.0F,0.0F);
+			glColor3ub(140,140,140);
+			glVertex3f(.07F,0.0F,0.0F);
+			glVertex3f(.07F,.2F,0.0F);
+			
+			glColor3ub(110,110,110);
+			glVertex3f(.07F,.3F,0.0F);
+			glVertex3f(.07F,0.0F,0.0F);
+			glColor3ub(140,140,140);
+			glVertex3f(.25F,0.0F,0.0F);
+			glVertex3f(.25F,.3F,0.0F);
+			
+			glColor3ub(110,110,110);
+			glVertex3f(.25F,.4F,0.0F);
+			glVertex3f(.25F,0.0F,0.0F);
+			glColor3ub(140,140,140);
+			glVertex3f(.34F,0.0F,0.0F);
+			glVertex3f(.34F,.4F,0.0F);
+			glEnd();
+			glEndList();
+
+		//roof
+			list_roof = glGenLists(1);
+			glNewList(list_roof, GL_COMPILE);
+			glBegin(GL_QUAD_STRIP);
+			glColor3ub(160,160,160);
+			glVertex3f(-0.5F,.25F,0.0F);
+			glVertex3f(-0.5F,0.0F,0.0F);
+			glVertex3f(.5F,.25F,0.0F);
+			glVertex3f(.5F,0.0F,0.0F);
+
+			glVertex3f(.5F,.25F,-.5F);
+			glVertex3f(.5F,.0F,-.5F);
+			glVertex3f(-.5F,.25F,-.5F);
+			glVertex3f(-.5F,.0F,-.5F);
+			glVertex3f(-.5F,.25F,.0F);
+			glVertex3f(-.5F,.0F,.0F);
+			glEnd();
+			glBegin(GL_QUADS);
+			glColor3ub(190,190,190);
+			glVertex3f(-.5F,.2501F,-.5F);
+			glVertex3f(-.5F,.2501F,0.0F);
+			glVertex3f(.5F,.2501F,0.0F);
+			glVertex3f(.5F,.2501F,-.5F);
+			
+			glColor3ub(80,80,80);
+			glVertex3f(-.5F,0.0F,0.0F);
+			glVertex3f(-.5F,0.0F,-.5F);
+			glVertex3f(.5F,0.0F,-.5F);
+			glVertex3f(.5F,0.0F,0.0F);
+			glEnd();
+			glEndList();
 
 		//windowblock start
 			list_windowblock=glGenLists(1);
@@ -989,7 +1058,7 @@ list_door=glGenLists(1);
 								//window on tallest tower
 								if(col==22&&row==0){
 									  glPushMatrix();
-										glTranslatef(15,col,-13.9-row);
+										glTranslatef(15,col+2,-13.9-row);
 										glScaled(.5,.5,1);
 										glCallList(list_windowsemi);
 										glPopMatrix();
@@ -1003,12 +1072,31 @@ list_door=glGenLists(1);
 						  glScaled(2.5,7,3);
 						glCallList(list_pyramid);
 					  glPopMatrix();
+					  
+					  glPushMatrix();
+					    glTranslatef(15,22,-13.5);
+						glScaled(4.6,1.3,6);
+						glCallList(list_roof);
+					  glPopMatrix();
+					  
+					  glPushMatrix();
+					    glTranslatef(15,17,-13.5);
+						glScaled(4.6,1.3,6);
+						glCallList(list_roof);
+					  glPopMatrix();
+
 
 
 					  //wall around castle
 					  glPushMatrix();
 						glTranslatef(0,0,0);
 						glCallList(list_outer_wall);
+					  glPopMatrix();
+
+					   glPushMatrix();
+					    glTranslatef(13,9.9,1.4);
+						glScaled(35,1.7,6);
+						glCallList(list_roof);
 					  glPopMatrix();
 
 					  //Inner Wall
@@ -1062,6 +1150,11 @@ list_door=glGenLists(1);
 						glScaled(3.5,4,3);
 						glCallList(list_pyramid);
 					glPopMatrix();
+					  glPushMatrix();
+					    glTranslatef(19.8,13,-2);
+						glScaled(6.7,1.0,10.0);
+						glCallList(list_roof);
+					  glPopMatrix();
 
 					//back left tower
 					glPushMatrix();
@@ -1109,6 +1202,27 @@ list_door=glGenLists(1);
 						glCallList(list_fence);
 						glPopMatrix();
 				    }
+
+					//floor
+					glBegin(GL_QUADS);
+					glColor3ub(40,80,40);
+					glVertex3f(-100,0.0F,5.5F);
+					glVertex3f(100,0.0F,5.5F);
+					glVertex3f(100,0.0F,-100);
+					glVertex3f(-100,0.0F,-100);
+					
+					glColor3ub(130,130,80);
+					glVertex3f(-100,-3.0F,7);
+					glVertex3f(100,-3.0F,7);
+					glVertex3f(100,0.0F,5.5F);
+					glVertex3f(-100,0.0F,5.5F);
+
+					glColor3ub(60,100,60);
+					glVertex3f(100,-2.0F,7);
+					glVertex3f(-100,-2.0F,7);
+					glVertex3f(-100,-2.0F,100);
+					glVertex3f(100,-2.0F,100);
+					glEnd();
 				glEndList();
 }
 
