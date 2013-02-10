@@ -29,7 +29,8 @@ GLdouble turnspeedy = .1;
 
 //LISTS
 GLuint list_pyramid, list_column, list_windowsemi, list_windowblock, list_crenn, list_coord;
-GLuint list_door, list_stairstep, list_stairside, list_tree, list_hill, list_fence;
+GLuint list_door, list_stairstep, list_stairside, list_tree, list_hill, list_fence,list_tower;
+GLuint list_wall,list_outer_wall,list_small_tower,list_full_castle;
 GLdouble objectMatrix[16];
 
 
@@ -39,19 +40,47 @@ void render(){
 
  glPushMatrix();
   glMultMatrixd(objectMatrix);
-  glPushMatrix();
+
+  /*glPushMatrix();
 	glTranslatef(-5.0F,0.0F,0.0F);
 	glCallList(list_pyramid);
   glPopMatrix();
-  glPushMatrix();
-	glTranslatef(-10.0F,0.0F,0.0F);
-    glCallList(list_column);
-  glPopMatrix();
-  glPushMatrix();
-	glTranslatef(5.0F,0.0F,0.0F);
-  glCallList(list_fence);
-  glPopMatrix();
+  */
 
+  glPushMatrix();
+  	glTranslatef(-10,-5,-15);
+  	glScaled(.5,.5,.5);
+  	glCallList(list_full_castle);
+    glPopMatrix();
+
+    glPushMatrix();
+   	glTranslatef(-30.0F,0,-10.0F);
+   	glScaled(.8,.6,.5);
+    glCallList(list_hill);
+     glPopMatrix();
+
+/*
+
+     glPushMatrix();
+    	glTranslatef(-25,0,-25);
+    	glRotated(90,0,1,0);
+    	glScaled(.8,.6,.5);
+     glCallList(list_hill);
+      glPopMatrix();
+*/
+  //  glPushMatrix();
+//	glTranslatef(-5.0F,0.0F,0.0F);
+//	glCallList(list_wall);
+//  glPopMatrix();
+
+
+//  glPushMatrix();
+//	glTranslatef(10.0F,0.0F,0.0F);
+//    glCallList(list_column);
+//  glPopMatrix();
+
+
+/*
   double stair_x=0,stair_y =-5.0, stair_z=0;
   for(int i =0; i<20;i++){
 
@@ -76,10 +105,6 @@ void render(){
 	glTranslatef(20.0F,-9.0F,-8.0F);
   glCallList(list_door);
   glPopMatrix();
- glPushMatrix();
-	glTranslatef(-30.0F,6.0F,-10.0F);
- glCallList(list_hill);
-  glPopMatrix();
 
   glPushMatrix();
 	glTranslatef(30,-10,0.0);
@@ -96,7 +121,7 @@ void render(){
  	glTranslatef(-0.0F,0.0F,0.0F);
     glCallList(list_windowsemi);
      glPopMatrix();
-
+*/
    glPopMatrix();
   glFlush();
   glutSwapBuffers();
@@ -768,6 +793,323 @@ list_door=glGenLists(1);
 				glEnd();
 
 			glEndList();
+
+
+			//tower start
+				list_tower=glGenLists(1);
+				glNewList(list_tower, GL_COMPILE);
+
+			 for(int row=0; row<3;row++){
+				  for(int col=0; col<12;col++){
+					glPushMatrix();
+						glRotated(72,0,1,0);
+						glTranslatef(row,col,0.0F);
+						glCallList(list_column);
+					glPopMatrix();
+					glPushMatrix();
+						glRotated(144,0,1,0);
+						glTranslatef(row+2,col,2);
+						glCallList(list_column);
+					glPopMatrix();
+					glPushMatrix();
+						glRotated(216,0,1,0);
+						glTranslatef(row,col,5);
+						glCallList(list_column);
+					glPopMatrix();
+
+					glPushMatrix();
+						glRotated(288,0,1,0);
+						glTranslatef(row-3,col,4);
+						glCallList(list_column);
+					glPopMatrix();
+
+					glPushMatrix();
+						glRotated(360,0,1,0);
+						glTranslatef(row-3,col,1);
+						glCallList(list_column);
+					glPopMatrix();
+				  }
+			  }
+
+			  	  	  glPushMatrix();
+						glTranslatef(-3,10,2.12);
+					   glCallList(list_windowblock);
+					    glPopMatrix();
+					    glPushMatrix();
+						glTranslatef(-1.5,10,2.12);
+					   glCallList(list_windowblock);
+					    glPopMatrix();
+					    glEndList();
+
+
+			//begin  castle wall
+						list_wall=glGenLists(1);
+									glNewList(list_wall, GL_COMPILE);
+					    int num =0;
+					        for(int row=0; row<12;row+=2){
+					    	  for(int col=0; col<10;col+=2){
+
+
+					    		  //front left wall
+					    		  	glPushMatrix();
+					    		  	glTranslatef(row,col,0.0F);
+					    		    glCallList(list_column);
+					    		    glPopMatrix();
+
+					    			//windows on front wall
+					    			if(col ==8&&num <5){
+					    			   glPushMatrix();
+					    			   glScaled(.5,.8,1);
+					    				glTranslatef(row*2.225,col,1.1);
+					    			   glCallList(list_windowblock);
+					    			    glPopMatrix();
+					    			    num++;
+					    			}
+					    	  }
+					        }
+					  glEndList();
+
+
+				//begin  castle wall
+				list_outer_wall=glGenLists(1);
+				glNewList(list_outer_wall, GL_COMPILE);
+			  		glPushMatrix();
+			  		glTranslatef(0,0,0);
+			  		glScaled(.9,1,1);
+					glCallList(list_wall);
+					glPopMatrix();
+
+					glPushMatrix();
+					glTranslatef(17.7,0,0);
+			  		glScaled(.9,1,1);
+					glCallList(list_wall);
+					glPopMatrix();
+
+					    	  for(int row=0; row>-20;row-=2){
+					    		  for(int col=0; col<9;col+=2){
+					    			  //left side wall
+					    			  	glPushMatrix();
+					    			  	glTranslatef(-4,col,row-4);
+					    			    glCallList(list_column);
+					    			    glPopMatrix();
+
+					    			    //right side wall
+					    			    glPushMatrix();
+					    				glTranslatef(31.8,col,row-4);
+					    				glCallList(list_column);
+					    				glPopMatrix();
+					      	  }
+					    		  }
+					    	  //back wall
+					    	  for(int row=0; row<36;row+=2){
+					    		  for(int col =0; col< 9; col+=2){
+					    			glPushMatrix();
+					    			glTranslatef(row-3.7,col,-24);
+					    			glCallList(list_column);
+					    			glPopMatrix();
+					    		  }
+					    	  }
+					    	  glPushMatrix();
+					    	  	glTranslatef(-2.7,0.0F,1);
+					    	  	glCallList(list_tower);
+					    	    glPopMatrix();
+
+					    	  glPushMatrix();
+					    		glTranslatef(33.6,0.0,1);
+					    		glCallList(list_tower);
+					    		glPopMatrix();
+
+					    	  glPushMatrix();
+					    		glTranslatef(10,0,0.0F);
+					    	  glCallList(list_door);
+					    	  glPopMatrix();
+
+					 glEndList();
+		//end castle wall
+
+	  //Begin small tower
+
+		 list_small_tower=glGenLists(1);
+		glNewList(list_small_tower, GL_COMPILE);
+
+					for(int i=0; i<2;i++){
+					  glPushMatrix();
+						glTranslatef(8,6*i,-6);
+						glRotated(-90,0,1,0);
+						glScaled(.3,.6,.5);
+						glCallList(list_wall);
+					  glPopMatrix();
+
+					  glPushMatrix();
+						glTranslatef(5,6*i,-3);
+						glRotated(90,0,1,0);
+						glScaled(.3,.6,.5);
+						glCallList(list_wall);
+					  glPopMatrix();
+
+					  glPushMatrix();
+						glTranslatef(8,6*i,-3);
+						glRotated(180,0,1,0);
+						glScaled(.3,.6,.5);
+						glCallList(list_wall);
+					  glPopMatrix();
+
+					  glPushMatrix();
+						glTranslatef(5,6*i,-6);
+						glScaled(.3,.6,.5);
+						glCallList(list_wall);
+					  glPopMatrix();
+
+					}
+					  glPushMatrix();
+						glTranslatef(6,11,-2.49);
+						glScaled(.3,.3,.5);
+						glCallList(list_windowsemi);
+					  glPopMatrix();
+
+
+					glEndList();
+
+	  //Begin full castle
+			 list_full_castle=glGenLists(1);
+			glNewList(list_full_castle, GL_COMPILE);
+					for(int row =0; row <2;row++){
+						  for(int col=0;col<25;col++){
+
+							  glPushMatrix();
+								glTranslatef(14,col,-15-row);
+								glCallList(list_column);
+								glPopMatrix();
+
+							  glPushMatrix();
+								glTranslatef(16,col,-15-row);
+								glCallList(list_column);
+								glPopMatrix();
+
+								//window on tallest tower
+								if(col==22&&row==0){
+									  glPushMatrix();
+										glTranslatef(15,col,-13.9-row);
+										glScaled(.5,.5,1);
+										glCallList(list_windowsemi);
+										glPopMatrix();
+								}
+						  }
+					  }
+
+					//peak of tallest tower
+					  glPushMatrix();
+						glTranslatef(15,25,-15.5);
+						  glScaled(2.5,7,3);
+						glCallList(list_pyramid);
+					  glPopMatrix();
+
+
+					  //wall around castle
+					  glPushMatrix();
+						glTranslatef(0,0,0);
+						glCallList(list_outer_wall);
+					  glPopMatrix();
+
+					  //Inner Wall
+					  for(int width=0; width<3;width++){
+
+							  glPushMatrix();
+								glTranslatef(6*width+5,0,-6);
+								glScaled(.5,1,.5);
+								glCallList(list_wall);
+							  glPopMatrix();
+
+							  glPushMatrix();
+								glTranslatef(23,0,-6-6*width);
+								glRotated(90,0,1,0);
+								glScaled(.5,1,.5);
+								glCallList(list_wall);
+							  glPopMatrix();
+
+
+							  glPushMatrix();
+								glTranslatef(5,0,-12-6*width);
+								glRotated(-90,0,1,0);
+								glScaled(.5,1,.5);
+								glCallList(list_wall);
+							  glPopMatrix();
+					  }
+					  //inner left small tower
+					  glPushMatrix();
+						glTranslatef(0,0,0);
+						glCallList(list_small_tower);
+					  glPopMatrix();
+
+					  //inner left small tower peak
+					glPushMatrix();
+						glTranslatef(6.5,12,-4.5);
+						glScaled(2,1,2);
+						glCallList(list_pyramid);
+					glPopMatrix();
+
+					//inner right medium tower
+					glPushMatrix();
+						glTranslatef(10,0,0);
+						glScaled(1.5,1.1,1);
+						glCallList(list_small_tower);
+					glPopMatrix();
+
+
+					//inner right medium tower peak
+					glPushMatrix();
+						glTranslatef(20,13,-5);
+						glScaled(3.5,4,3);
+						glCallList(list_pyramid);
+					glPopMatrix();
+
+					//back left tower
+					glPushMatrix();
+						glTranslatef(-12,0,-15);
+						glScaled(2,1.5,1.5);
+						glCallList(list_small_tower);
+					glPopMatrix();
+
+
+					//back left tower peak
+					glPushMatrix();
+						glTranslatef(1,18,-22);
+						glScaled(4,6,4);
+						glCallList(list_pyramid);
+					glPopMatrix();
+
+
+					//inner left medium tower
+					glPushMatrix();
+						glTranslatef(-12,0,-3);
+						glScaled(2,1.1,1);
+						glCallList(list_small_tower);
+					glPopMatrix();
+
+
+					//inner left medium tower peak
+					glPushMatrix();
+						glTranslatef(1,13,-8);
+						glScaled(8,1,3);
+						glCallList(list_pyramid);
+					glPopMatrix();
+
+
+				    //fence
+				    for(int i=0; i<30;i++){
+						glPushMatrix();
+						glTranslatef(18+i-.1*i,0,5);
+						  glRotated(180,0,1,0);
+						glCallList(list_fence);
+						glPopMatrix();
+
+						glPushMatrix();
+						glTranslatef(45,0,5-i+.1*i);
+						  glRotated(270,0,1,0);
+						glCallList(list_fence);
+						glPopMatrix();
+				    }
+				glEndList();
 }
 
 int main(int argc, char** argv){
