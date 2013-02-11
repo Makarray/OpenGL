@@ -9,7 +9,6 @@
 #endif
 #include <GL/glut.h>
 #include <math.h>
-//#include "stdafx.h"	//for visual c++, just delete this if not on visual studio
 
 
 //Functions
@@ -26,9 +25,7 @@ GLdouble mvMatrix[16];
 GLdouble prMatrix[16];
 GLdouble eyepos[3] = {0,0,8};	//start backwards 8
 GLdouble eyefocus[3] = {0,0,7};	//start directly fowards
-GLdouble walkspeed = 0.25;	//how quickly the camera walks
-GLdouble turnspeedx = .1;			//how quickly the camera turns
-GLdouble turnspeedy = .1;
+bool isFilled = true;
 
 //LISTS
 GLuint list_pyramid, list_column, list_windowsemi, list_windowblock, list_crenn, list_coord, list_roof;
@@ -39,7 +36,6 @@ GLdouble objectMatrix[16];
 
 void render(){
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glPolygonMode(GL_FRONT, GL_FILL);
 
  glPushMatrix();
   glMultMatrixd(objectMatrix);
@@ -1208,6 +1204,17 @@ void keyboard(unsigned char key, int x, int y){
 		break;
 	case 'f':
 		moveEye(9);
+		break;
+	case 't':
+		if (isFilled) {
+			glPolygonMode(GL_FRONT,GL_LINE);
+			isFilled = false;
+			glutPostRedisplay();
+		} else {
+			glPolygonMode(GL_FRONT,GL_FILL);
+			isFilled = true;
+			glutPostRedisplay();
+		}
 		break;
 
   }
