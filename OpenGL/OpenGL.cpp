@@ -1216,6 +1216,50 @@ void keyboard(unsigned char key, int x, int y){
 			glutPostRedisplay();
 		}
 		break;
+	case '1':
+		glPushMatrix();
+		glLoadIdentity();
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glMultMatrixd(objectMatrix);
+		glTranslated(0,-3,3);
+		glRotated(10,1,0,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		glutPostRedisplay();
+		break;
+	case '2':
+		glPushMatrix();
+		glLoadIdentity();
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glMultMatrixd(objectMatrix);
+		glTranslated(3,4,3);
+		glRotated(-10,0,1,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		glutPostRedisplay();
+		break;
+	case '3':
+		glPushMatrix();
+		glLoadIdentity();
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glMultMatrixd(objectMatrix);
+		glTranslated(-5,3,0);
+		glRotated(-10,0,1,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		glutPostRedisplay();
+		break;
+	case '4':
+		glPushMatrix();
+		glLoadIdentity();
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glMultMatrixd(objectMatrix);
+		glTranslated(2,6,13);
+		glRotated(-20,1,0,0);
+		glGetDoublev(GL_MODELVIEW_MATRIX,objectMatrix);
+		glPopMatrix();
+		glutPostRedisplay();
+		break;
 
   }
 }
