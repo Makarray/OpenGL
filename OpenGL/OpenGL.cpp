@@ -33,7 +33,7 @@ GLdouble turnspeedy = .1;
 //LISTS
 GLuint list_pyramid, list_column, list_windowsemi, list_windowblock, list_crenn, list_coord, list_roof;
 GLuint list_door, list_stairstep, list_stairside, list_tree, list_hill, list_fence,list_tower;
-GLuint list_wall,list_outer_wall,list_small_tower,list_full_castle;
+GLuint list_wall,list_outer_wall,list_small_tower,list_full_castle,list_tree2;
 GLdouble objectMatrix[16];
 
 
@@ -44,11 +44,11 @@ void render(){
  glPushMatrix();
   glMultMatrixd(objectMatrix);
 
-  /*glPushMatrix();
-	glTranslatef(-5.0F,0.0F,0.0F);
-	glCallList(list_pyramid);
-  glPopMatrix();
-  */
+  glPushMatrix();
+  	glTranslatef(5,5,2);
+  	glCallList(list_tree2);
+    glPopMatrix();
+
 
   glPushMatrix();
   	glTranslatef(-10,-5,-15);
@@ -62,99 +62,13 @@ void render(){
     glCallList(list_hill);
      glPopMatrix();
 
-	 glPushMatrix();
-	 glTranslatef(1.0F,0.0F,-13.0F);
-	 glCallList(list_crenn);
-	 //glCallList(list_roof);
-	 glPopMatrix();
 
-/*
-
-     glPushMatrix();
-    	glTranslatef(-25,0,-25);
-    	glRotated(90,0,1,0);
-    	glScaled(.8,.6,.5);
-     glCallList(list_hill);
-      glPopMatrix();
-*/
-  //  glPushMatrix();
-//	glTranslatef(-5.0F,0.0F,0.0F);
-//	glCallList(list_wall);
-//  glPopMatrix();
-
-
-//  glPushMatrix();
-//	glTranslatef(10.0F,0.0F,0.0F);
-//    glCallList(list_column);
-//  glPopMatrix();
-
-
-/*
-  double stair_x=0,stair_y =-5.0, stair_z=0;
-  for(int i =0; i<20;i++){
-
-	  glPushMatrix();
-	  glTranslatef(stair_x,stair_y,stair_z);
-	  glCallList(list_stairstep);
-	  glPopMatrix();
-	  stair_y+=.1;
-	  stair_z+=-.1;
-	 }
-
-
-  glPushMatrix();
-
-	 glRotatef(15,1,0,0);
-	glTranslatef(-.2,-4.4,1);
-  glCallList(list_stairside);
-   glPopMatrix();
-
-
-  glPushMatrix();
-	glTranslatef(20.0F,-9.0F,-8.0F);
-  glCallList(list_door);
-  glPopMatrix();
-
-  glPushMatrix();
-	glTranslatef(30,-10,0.0);
-  glCallList(list_tree);
-   glPopMatrix();
-
-
-   glPushMatrix();
-	glTranslatef(-5.0F,0.0F,0.0F);
-   glCallList(list_windowblock);
-    glPopMatrix();
-
-    glPushMatrix();
- 	glTranslatef(-0.0F,0.0F,0.0F);
-    glCallList(list_windowsemi);
-     glPopMatrix();
-*/
    glPopMatrix();
   glFlush();
   glutSwapBuffers();
 }
 
 void createObjects(){
-
-
-//coordinates
-	list_coord = glGenLists(1);
-	glNewList(list_coord, GL_COMPILE);
-  glBegin(GL_LINES);
-  glColor3ub(255,0,0);
-     glVertex3f(0.0F,0.0F,0.0F);
-	 glVertex3f(0.5F,0.0F,.0F);
-  glColor3ub(0,255,0);
-     glVertex3f(.0F,.0F,.0F);
-	 glVertex3f(.0F,.5F,.0F);
-  glColor3ub(0,0,255);
-     glVertex3f(.0F,.0F,.0F);
-	 glVertex3f(.0F,.0F,.5F);
-  glEnd();
-	glEnd();
-	glEndList();
 //Pyramid
 	list_pyramid = glGenLists(1);
 	glNewList(list_pyramid, GL_COMPILE);
@@ -569,7 +483,21 @@ list_door=glGenLists(1);
 
 				glEnd();
 			glEndList();
+	//tree2 start
+			list_tree=glGenLists(1);
+			glNewList(list_tree2, GL_COMPILE);
+				glBegin(GL_TRIANGLE_FAN);
 
+				glColor3f(0.36,.2,.2);
+				glVertex3f(.0F,4.0F,.0F);
+				glVertex3f(-0.02F,.0F,.0F);
+				glVertex3f(.0F,.0F,.02F);
+				glVertex3f(.02F,.0F,.0F);
+				glVertex3f(.0F,.0F,-.02F);
+				glEnd();
+				glEnd();
+				glEndList();
+	//end tree2
 	//tree start
 			list_tree=glGenLists(1);
 			glNewList(list_tree, GL_COMPILE);
@@ -1222,6 +1150,14 @@ list_door=glGenLists(1);
 					glVertex3f(-100,-2.0F,7);
 					glVertex3f(-100,-2.0F,100);
 					glVertex3f(100,-2.0F,100);
+					glEnd();
+					
+					glBegin(GL_LINES);
+					glColor3ub(160,160,90);
+					for(int i=-100; i<100;i++){
+						glVertex3f(i,-3.001,7);
+						glVertex3f(i,0.001,5.5);
+					}
 					glEnd();
 				glEndList();
 }
